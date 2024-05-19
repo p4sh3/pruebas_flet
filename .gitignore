@@ -3,5 +3,8 @@ include
 lib
 lib64
 share
+Include
+Lib
+Scripts
 main.spec
 pyvenv.cfg

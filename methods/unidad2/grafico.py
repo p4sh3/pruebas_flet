@@ -104,7 +104,8 @@ class Graficador:
         ax.grid("both")
 
         for index, root in enumerate(self.roots):
-            ax.scatter(root, [0], color=colors[index], label=f"$ R_{index+1}({root:.3},0)$")
+            print(root, type(root))
+            ax.scatter(root, [0], color=colors[index], label=f"$ R_{index+1}({root},0)$")
 
         ax.legend(
             loc="upper left", 
