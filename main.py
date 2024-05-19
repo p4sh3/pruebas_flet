@@ -10,7 +10,6 @@ import matplotlib as mpl
 
 import methods.unidad2.biseccion
 import methods.unidad2.grafico
-import methods.unidad3
 
 # def import_modules(packages):
 
