@@ -78,8 +78,6 @@ def main(page: ft.Page):
         
 
         # method_row = ft.Ref[ft.ResponsiveRow]()
-        page.padding = 0
-        page.spacing = 0
         page.title = "Métodos Numéricos"
 
         page.fonts = {
@@ -88,20 +86,35 @@ def main(page: ft.Page):
 
 
         def handle_color_click(e):
-            unidad = e.control.data[0]
-            method = e.control.data[1]
-            #module = f"methods.{unidad}.{method}"
-            module = f"methods.{unidad}.{method}"
-            view_controls = select_modulo(module).show()
-            listview.controls.append(view_controls)
-            # print("modulos despues de importar")
-            # for module in sys.modules:
-            #     print(module)
+            try:
+                unidad = e.control.data[0]
+                method = e.control.data[1]
+                module = f"methods.{unidad}.{method}"
+                selected_module = select_modulo(module)
+                if selected_module and hasattr(selected_module, 'show'):
+                    view_controls = selected_module.show()
+                    listview.controls.clear()  # Limpiar los controles existentes
+                    listview.controls.append(view_controls)
+                    page.update()
+                else:
+                    print(f"El módulo {module} no tiene la función 'show'")
+            except Exception as ex:
+                    print(f"Error al manejar el clic: {ex}")
+        
+            # unidad = e.control.data[0]
+            # method = e.control.data[1]
+            # #module = f"methods.{unidad}.{method}"
+            # module = f"methods.{unidad}.{method}"
+            # view_controls = select_modulo(module).show()
+            # listview.controls.append(view_controls)
+            # # print("modulos despues de importar")
+            # # for module in sys.modules:
+            # #     print(module)
 
-            # print("______________________--")
-            # print(method_row.current.controls )
-            # print(listview)
-            page.update()
+            # # print("______________________--")
+            # # print(method_row.current.controls )
+            # # print(listview)
+            # page.update()
 
 
         menubar = ft.MenuBar(
