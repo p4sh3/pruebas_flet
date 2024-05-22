@@ -53,7 +53,7 @@ def solve(fx, limite_inferior, limite_superior, cifras):
         xR_ant = xR
         iteracion += 1
 
-    return rows, xR
+    return rows, xR, iteracion, Ea, fx
 
 def show():
     
@@ -63,22 +63,79 @@ def show():
             limite_inferior = float(row.controls[1].value)
             limite_superior = float(row.controls[2].value)
             cifras = int(row.controls[3].value)
-
-            rows, raiz = solve(fx, limite_inferior, limite_superior, cifras)
+            
+            print(type(fx))
+            print(type(limite_inferior))
+            print(type(limite_superior))
+            print(type(cifras))
+            
+            rows, raiz, iteracion, Ea, fx = solve(fx, limite_inferior, limite_superior, cifras)
             table.rows = rows
             table.visible = True
+            lbl_resultados.value = f'Funcion {fx}\nSolucion: {raiz}\nCon {iteracion} iteraciones\nError porcentual aproximado {Ea}%'
+            container_resultados.visible=True
             event.control.page.update()
         except ValueError as e:
             print(f"Error: {e}")
+            show_alert(event, 'Error ingresa datos para calcular')
+        
+            
+    def close_alert(event):
+        event.control.page.banner.open = False
+        event.page.update()
+       
+    def show_alert(event, message):
+        event.control.page.banner = alert_banner
+        text_control =alert_banner.content
+        text_control.value = message
+        event.control.page.banner.open = True
+        event.page.update()
+    
+    alert_banner = ft.Banner(
+        bgcolor='#565656',
+        leading=ft.Icon(ft.icons.WARNING_AMBER_ROUNDED, color=ft.colors.AMBER, size=40),
+        content=ft.Text(),
+        actions=[
+            ft.TextButton("Ok", on_click=lambda event: close_alert(event)),
+            
+        ],
+    )
+    
+    def close_dlg(e):
+        dlg_modal.open = False
+        e.control.page.update()
 
+        
+    dlg_modal = ft.AlertDialog(
+            modal=True,
+            title=ft.Text("Expresiones permitidas"),
+            content=ft.Text("Las siguientes expresiones\nson permitidas para evaluar\nuna funcion matematica"),
+            actions=[
+                ft.TextButton("Ok", on_click=close_dlg),
+            ],
+            actions_alignment=ft.MainAxisAlignment.END,
+             on_dismiss=lambda e: print("Modal dialog dismissed!"),
+        )
+                
+    def open_dlg_modal(e):
+        e.control.page.dialog = dlg_modal
+        dlg_modal.open = True
+        e.control.page.update()
+        
+    
     row = ft.ResponsiveRow(
         [
             ft.TextField(
+                height=57,
                 label="Función", 
+                autofocus=True,
+                suffix=ft.IconButton(
+                    icon=ft.icons.HELP_OUTLINE_OUTLINED, on_click=open_dlg_modal),
                 col={"md": 3}),
             ft.TextField(
-                label="Límite Inferior", 
+                label="Límite Inferior",
                 col={"md": 3}),
+            
             ft.TextField(
                 label="Límite Superior", 
                 col={"md": 3}),
@@ -105,6 +162,24 @@ def show():
     button = ft.ElevatedButton(text="Resolver", on_click=get_data, width=100, height=45)
 
 
+    lbl_resultados = ft.Text()
+    
+    container_resultados = ft.Container(
+                    visible=False,
+                    bgcolor='#565656',  #ft.colors.BLUE_100,
+                    border_radius=ft.border_radius.all(20),
+                    padding=20,
+                    content=ft.ResponsiveRow(
+                        [
+                        ft.Container(
+                            lbl_resultados,
+                            col={"sm": 6, "md": 4, "xl": 12},
+                        ),
+                    ]
+                )
+            
+    )
+    
     container_input = ft.Container(
         bgcolor='#565656',
         border_radius=ft.border_radius.all(20),
@@ -114,7 +189,7 @@ def show():
 
     view_controls = ft.ResponsiveRow(
         controls=[
-            container_input, tbl
+            container_input,container_resultados, tbl
         ])
 
     

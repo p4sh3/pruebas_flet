@@ -79,11 +79,7 @@ def main(page: ft.Page):
         
 
         # method_row = ft.Ref[ft.ResponsiveRow]()
-<<<<<<< HEAD
-        # page.padding = 0
-        # page.spacing = 0
-=======
->>>>>>> 1d47a9b07a4ad0d763589eefbaa767edc0813e4f
+
         page.title = "Métodos Numéricos"
 
         page.fonts = {
@@ -91,27 +87,7 @@ def main(page: ft.Page):
         }
         
 
-        def handle_color_click(e):
-<<<<<<< HEAD
-            
-            unidad = e.control.data[0]
-            method = e.control.data[1]
-            #module = f"methods.{unidad}.{method}"
-            module = f"methods.{unidad}.{method}"   
-            metodo_actual = select_modulo(module)
-            
-            if listview.controls == '':
-                print(metodo_actual)
-                view_controls = select_modulo(module).show()
-                listview.controls.append(view_controls)
-            else: 
-                print('error')
-            
-            
-            # print("modulos despues de importar")
-            # for module in sys.modules:
-            #     print(module)
-=======
+        def method_click(e):
             try:
                 unidad = e.control.data[0]
                 method = e.control.data[1]
@@ -136,23 +112,49 @@ def main(page: ft.Page):
             # # print("modulos despues de importar")
             # # for module in sys.modules:
             # #     print(module)
->>>>>>> 1d47a9b07a4ad0d763589eefbaa767edc0813e4f
 
             # # print("______________________--")
             # # print(method_row.current.controls )
             # # print(listview)
             # page.update()
 
-        app_bar = ft.AppBar(
-        title=ft.Text("Mi Aplicación"),
-        center_title=True,
-        bgcolor=ft.colors.SURFACE_VARIANT,
+        def close_dlg(e):
+            dlg_modal.open = False
+            e.control.page.update()
 
+        
+        dlg_modal = ft.AlertDialog(
+                modal=True,
+                title=ft.Text("Expresiones permitidas"),
+                content=ft.Text("Las siguientes expresiones\nson permitidas para evaluar\nuna funcion matematica"),
+                actions=[
+                    ft.TextButton("Ok", on_click=close_dlg),
+                ],
+                actions_alignment=ft.MainAxisAlignment.END,
+                on_dismiss=lambda e: print("Modal dialog dismissed!"),
+        )
+                
+        def open_dlg_modal(e):
+            e.control.page.dialog = dlg_modal
+            dlg_modal.open = True
+            e.control.page.update()
+        
+        app_bar = ft.AppBar(
+            title=ft.Text("Mi Aplicación"),
+            center_title=True, 
+            bgcolor=ft.colors.SURFACE_VARIANT,
+            actions=[
+                ft.IconButton(
+                    icon=ft.icons.HELP_OUTLINE_OUTLINED,
+                    on_click=open_dlg_modal,
+                )
+            ]
         )
 
         
         menubar = ft.MenuBar(
             expand=True,
+            style= ft.MenuStyle(bgcolor=ft.colors.BLUE),
             controls=[
                 ft.SubmenuButton(
                     content=ft.Text("Unidad 2"),
@@ -161,19 +163,19 @@ def main(page: ft.Page):
                         ft.MenuItemButton(
                             content=ft.Text("Bisección"),
                             style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.BLUE}),
-                            on_click=handle_color_click,
+                            on_click=method_click,
                             data = ("unidad2", "biseccion")
                         ),
                         ft.MenuItemButton(
                             content=ft.Text("Método Gráfico"),
                             style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.GREEN}),
-                            on_click=handle_color_click,
+                            on_click=method_click, 
                             data = ("unidad2", "grafico")
                         ),
                         ft.MenuItemButton(
                             content=ft.Text("Falsa Posición"),
                             style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
-                            on_click=handle_color_click,
+                            on_click=method_click,
                         )
                     ]
                 ),
@@ -185,17 +187,17 @@ def main(page: ft.Page):
                         ft.MenuItemButton(
                             content=ft.Text("Horner"),
                             style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.BLUE}),
-                            on_click=handle_color_click,
+                            on_click=method_click,
                         ),
                         ft.MenuItemButton(
                             content=ft.Text("Muller"),
                             style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.GREEN}),
-                            on_click=handle_color_click,
+                            on_click=method_click,
                         ),
                         ft.MenuItemButton(
                             content=ft.Text("Ferrari"),
                             style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
-                            on_click=handle_color_click,
+                            on_click=method_click,
                         )
                     ]
                 ),
