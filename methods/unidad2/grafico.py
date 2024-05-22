@@ -152,14 +152,18 @@ def show():
         #thread = threading.Thread(target=solve, args=(fx))
         #thread.start()
         
-
+    
     row = ft.ResponsiveRow([
         ft.TextField(
             adaptive=True,
             label="Función",
             col={"md": 3}
-        )
+        )    
     ])
+
     
     
+    
+   
+
     return ft.Column([row, ft.ElevatedButton(text="Resolver", on_click=get_data)])

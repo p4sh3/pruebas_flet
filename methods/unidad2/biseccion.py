@@ -1,7 +1,7 @@
 import flet as ft
 import sympy as sp
 import pandas as pd
-
+from methods.unidad2.grafico import show as show_grafico
 name = "Método de Bisección"
 
 def validar_expresion(expr):
@@ -104,6 +104,7 @@ def show():
 
     button = ft.ElevatedButton(text="Resolver", on_click=get_data, width=100, height=45)
 
+
     container_input = ft.Container(
         bgcolor='#565656',
         border_radius=ft.border_radius.all(20),
@@ -115,5 +116,9 @@ def show():
         controls=[
             container_input, tbl
         ])
+
+    
+
+    
 
     return view_controls
