@@ -56,6 +56,7 @@ def solve(fx, limite_inferior, limite_superior, cifras):
     return rows, xR
 
 def show():
+    
     def get_data(event):
         try:
             fx = validar_expresion(row.controls[0].value)

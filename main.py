@@ -71,29 +71,39 @@ def select_modulo(module_name):
         #     return None
     return sys.modules[module_name]
 
+    
 
 def main(page: ft.Page):
-        
+        page.theme_mode = ft.ThemeMode.DARK 
         listview = ft.ListView(expand=1, auto_scroll=True )
         
 
         # method_row = ft.Ref[ft.ResponsiveRow]()
-        page.padding = 0
-        page.spacing = 0
+        # page.padding = 0
+        # page.spacing = 0
         page.title = "Métodos Numéricos"
 
         page.fonts = {
             "Roboto Mono": "RobotoMono-VariableFont_wght.ttf",
         }
-
+        
 
         def handle_color_click(e):
+            
             unidad = e.control.data[0]
             method = e.control.data[1]
             #module = f"methods.{unidad}.{method}"
-            module = f"methods.{unidad}.{method}"
-            view_controls = select_modulo(module).show()
-            listview.controls.append(view_controls)
+            module = f"methods.{unidad}.{method}"   
+            metodo_actual = select_modulo(module)
+            
+            if listview.controls == '':
+                print(metodo_actual)
+                view_controls = select_modulo(module).show()
+                listview.controls.append(view_controls)
+            else: 
+                print('error')
+            
+            
             # print("modulos despues de importar")
             # for module in sys.modules:
             #     print(module)
@@ -103,7 +113,14 @@ def main(page: ft.Page):
             # print(listview)
             page.update()
 
+        app_bar = ft.AppBar(
+        title=ft.Text("Mi Aplicación"),
+        center_title=True,
+        bgcolor=ft.colors.SURFACE_VARIANT,
 
+        )
+
+        
         menubar = ft.MenuBar(
             expand=True,
             controls=[
@@ -157,7 +174,8 @@ def main(page: ft.Page):
         )
 
         page.add(
-            ft.ResponsiveRow([menubar]),
+            app_bar,
+            ft.ResponsiveRow([ menubar]),
             listview
         )
 
