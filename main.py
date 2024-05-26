@@ -8,6 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
+from methods.widgets.widgets import open_dlg_modal
 import methods.unidad2.biseccion
 import methods.unidad2.grafico
 
@@ -118,26 +119,6 @@ def main(page: ft.Page):
             # # print(listview)
             # page.update()
 
-        def close_dlg(e):
-            dlg_modal.open = False
-            e.control.page.update()
-
-        
-        dlg_modal = ft.AlertDialog(
-                modal=True,
-                title=ft.Text("Expresiones permitidas"),
-                content=ft.Text("Las siguientes expresiones\nson permitidas para evaluar\nuna funcion matematica"),
-                actions=[
-                    ft.TextButton("Ok", on_click=close_dlg),
-                ],
-                actions_alignment=ft.MainAxisAlignment.END,
-                on_dismiss=lambda e: print("Modal dialog dismissed!"),
-        )
-                
-        def open_dlg_modal(e):
-            e.control.page.dialog = dlg_modal
-            dlg_modal.open = True
-            e.control.page.update()
         
         app_bar = ft.AppBar(
             title=ft.Text("Mi Aplicación"),
