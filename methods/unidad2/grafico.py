@@ -158,12 +158,24 @@ def show():
             adaptive=True,
             label="Función",
             col={"md": 3}
+        ),
+        ft.ElevatedButton(
+            text="Resolver", 
+            on_click=get_data,
+            height=45,
+            col={"md": 3}
         )    
-    ])
+        ], alignment=ft.MainAxisAlignment.CENTER,
+    )
 
-    
+    container_input = ft.Container(
+        bgcolor='#565656',
+        border_radius=ft.border_radius.all(20),
+        padding=20,
+        content=row, 
+    )
     
     
    
 
-    return ft.Column([row, ft.ElevatedButton(text="Resolver", on_click=get_data)])
+    return container_input
