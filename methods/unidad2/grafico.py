@@ -3,7 +3,7 @@ import sympy as sp
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-
+from methods.widgets.widgets import show_alert
 name = "Método Gráfico"
 
 class Graficador:
@@ -75,7 +75,7 @@ class Graficador:
         # Flechitas en los ejes
         ax.plot(1, 0, ">k", transform=ax.get_yaxis_transform(), clip_on=False)
         ax.plot(0, 1, "^k", transform=ax.get_xaxis_transform(), clip_on=False)
-
+        
         ax.plot(self.x_vals, self.y_vals, color="grey")
 
         ax.set_xlabel(
@@ -139,14 +139,34 @@ class Graficador:
 
 
 
-def validar_expresion(str):
-    import sympy as sp
-    return sp.parse_expr(str)
+# def validar_expresion(str):
+#     import sympy as sp
+#     return sp.parse_expr(str)
+
+
+def validar_expresion(expr):
+    if not expr.strip():
+        raise ValueError("La expresión no puede estar vacía")
+    try:
+        sym_expr = sp.sympify(expr)
+        symbols = sym_expr.free_symbols
+        if len(symbols) != 1 or sp.Symbol('x') not in symbols:
+            raise ValueError("La expresión debe contener exactamente el símbolo 'x'")
+        return sym_expr
+    except sp.SympifyError:
+        raise ValueError("La expresión no es válida")
 
 def show():
 
     def get_data(event):
-        fx = validar_expresion(row.controls[0].value)
+        
+        try:
+            
+            fx = validar_expresion(row.controls[0].value)
+        except ValueError as e:
+            print(f"Error: {e}")
+            show_alert(event, f'{e}')
+
         graficador = Graficador(fx, event)
         graficador.solve()
         #thread = threading.Thread(target=solve, args=(fx))

@@ -8,7 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
-from methods.widgets.widgets import open_dlg_modal
+from methods.widgets.widgets import open_dlg_modal, show_alert
 import methods.unidad2.biseccion
 import methods.unidad2.grafico
 
@@ -103,6 +103,7 @@ def main(page: ft.Page):
                     print(f"El módulo {module} no tiene la función 'show'")
             except Exception as ex:
                     print(f"Error al manejar el clic: {ex}")
+                    show_alert(event, f'{e}')
         
             # unidad = e.control.data[0]
             # method = e.control.data[1]
