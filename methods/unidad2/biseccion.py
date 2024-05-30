@@ -35,6 +35,7 @@ def solve(fx, limite_inferior, limite_superior, cifras): # codigo del algoritmo
     x1 = limite_inferior
     xU = limite_superior
     xR = 0
+    metodo = 'Biseccion'
     
     Es = 0.5 * 10 ** (2 - cifras)
     iteracion = 1
@@ -74,7 +75,7 @@ def solve(fx, limite_inferior, limite_superior, cifras): # codigo del algoritmo
         xR_ant = xR
         iteracion += 1
 
-    return rows, xR, iteracion, Ea, fx
+    return rows, xR, iteracion, Ea, fx, metodo
 
 def show(): # Muestra los resultados 
     
@@ -88,27 +89,32 @@ def show(): # Muestra los resultados
             f_x1 = fx.subs(x, limite_inferior).evalf()
             f_xu = fx.subs(x, limite_superior).evalf()
             
-            if (f_x1 > 0 and f_xu < 0) or (f_x1 < 0 and f_xu > 0):
-                
-                try: 
-                    rows, raiz, iteracion, Ea, fx = solve(fx, limite_inferior, limite_superior, cifras)
-                    table.rows = rows
-                    table.visible = True
-                    #Mostrar resultados
-                    lbl_root.content = ft.Text(value=f'Solucion: {raiz}', weight="bold", size=20)
-                    lbl_root.bgcolor = ft.colors.GREEN
-                    lbl_root.padding = 10
-                    lbl_root.border_radius = 25
-                    lbl_root.width = 100
-                    lbl_results.value = f'Funcion {fx}\nCon {iteracion} iteraciones\nError porcentual aproximado {Ea}%'
-                    container_results.visible=True
-                    
-                    event.control.page.update()
-                except ValueError as e:
-                    print(f"Error: {e}")
-                    show_alert(event, f'Ingrese una funcion valida {e}')
+            if (f_x1 > 0 and f_xu < 0 and cifras >= 0) or (f_x1 < 0 and f_xu > 0 and cifras >= 0):
+                if(limite_superior > limite_inferior):
+                    try: 
+                        rows, raiz, iteracion, Ea, fx, metodo = solve(fx, limite_inferior, limite_superior, cifras)
+                        table.rows = rows
+                        table.visible = True
+                        #Mostrar resultados
+                        lbl_root.content = ft.Text(value=f'Solucion: {raiz}', weight="bold", size=20)
+                        lbl_root.bgcolor = ft.colors.GREEN
+                        lbl_root.padding = 10
+                        lbl_root.border_radius = 25
+                        lbl_root.width = 100
+                        lbl_results.value = f'Metodo: {metodo}\nFuncion {fx}\nCon {iteracion} iteraciones\nError porcentual aproximado {Ea}%'
+                        container_results.visible=True
+                        
+                        event.control.page.update()
+                    except ValueError as e:
+                        print(f"Error: {e}")
+                        show_alert(event, f'Ingrese una funcion valida {e}')
+                else:
+                    show_alert(event, 'El limite inferior no puede ser mayor que el el limite superior')
             else: 
-                show_alert(event, f'En el intervalo [{limite_inferior}, {limite_superior}] no existe una raiz')
+                if cifras < 0:
+                    show_alert(event, 'Las cifras significativas deben ser mayor a cero')
+                else:   
+                    show_alert(event, f'En el intervalo [{limite_inferior}, {limite_superior}] no existe una raiz')
               
         except ValueError as e:
             print(f"Error: {e}")
