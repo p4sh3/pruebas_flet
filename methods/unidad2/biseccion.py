@@ -1,14 +1,33 @@
 import flet as ft
 import sympy as sp
 import pandas as pd
-from methods.unidad2.grafico import show as show_grafico
+# from methods.unidad1.grafico import show as show_grafico
 from methods.widgets.widgets import show_alert, open_dlg_modal
 name = "Método de Bisección"
 
-def validar_expresion(expr):# valida que se ingrese una funcion en el texfield funcion
-    if not expr.strip():
-        raise ValueError("Ingrese una funcio a resolver")
-    return sp.parse_expr(expr)
+
+def validar_expresion(expr):
+    x = sp.Symbol('x')
+    symbolos_permitidos = {x}
+    try: 
+        exp = sp.sympify(expr)
+    except (sp.SympifyError, SyntaxError):
+        raise ValueError('La expresion no es valida')
+    # Obtener todos los símbolos en la expresión
+    symbolos_en_expr = exp.free_symbols
+    
+    # Verificar que todos los símbolos estén permitidos
+    if not symbolos_en_expr.issubset(symbolos_permitidos):
+        raise ValueError("La expresión contiene símbolos no permitidos")
+    else: 
+        return sp.parse_expr(expr)
+
+
+
+# def validar_expresion(expr):# valida que se ingrese una funcion en el texfield funcion
+#     if not expr.strip():
+#         raise ValueError("Ingrese una funcio a resolver")
+#     return sp.parse_expr(expr)
 
 def solve(fx, limite_inferior, limite_superior, cifras): # codigo del algoritmo
     rows = []
@@ -65,21 +84,32 @@ def show(): # Muestra los resultados
             limite_inferior = float(row.controls[1].value)
             limite_superior = float(row.controls[2].value)
             cifras = int(row.controls[3].value)
+            x = sp.Symbol('x')
+            f_x1 = fx.subs(x, limite_inferior).evalf()
+            f_xu = fx.subs(x, limite_superior).evalf()
             
-            rows, raiz, iteracion, Ea, fx = solve(fx, limite_inferior, limite_superior, cifras)
-            table.rows = rows
-            table.visible = True
-            #Mostrar resultados
-            lbl_root.content = ft.Text(value=f'Solucion: {raiz}', weight="bold", size=20)
-            lbl_root.bgcolor = ft.colors.GREEN
-            lbl_root.padding = 10
-            lbl_root.border_radius = 5
-            lbl_root.width = 100
-            lbl_results.value = f'Funcion {fx}\nCon {iteracion} iteraciones\nError porcentual aproximado {Ea}%'
-            container_results.visible=True
-            
-            event.control.page.update()
-            
+            if (f_x1 > 0 and f_xu < 0) or (f_x1 < 0 and f_xu > 0):
+                
+                try: 
+                    rows, raiz, iteracion, Ea, fx = solve(fx, limite_inferior, limite_superior, cifras)
+                    table.rows = rows
+                    table.visible = True
+                    #Mostrar resultados
+                    lbl_root.content = ft.Text(value=f'Solucion: {raiz}', weight="bold", size=20)
+                    lbl_root.bgcolor = ft.colors.GREEN
+                    lbl_root.padding = 10
+                    lbl_root.border_radius = 25
+                    lbl_root.width = 100
+                    lbl_results.value = f'Funcion {fx}\nCon {iteracion} iteraciones\nError porcentual aproximado {Ea}%'
+                    container_results.visible=True
+                    
+                    event.control.page.update()
+                except ValueError as e:
+                    print(f"Error: {e}")
+                    show_alert(event, f'Ingrese una funcion valida {e}')
+            else: 
+                show_alert(event, f'En el intervalo [{limite_inferior}, {limite_superior}] no existe una raiz')
+              
         except ValueError as e:
             print(f"Error: {e}")
             show_alert(event, f'{e}') # me muestra errores si el usuario ingresa caracteres en los textfield 

@@ -103,7 +103,7 @@ def main(page: ft.Page):
                     print(f"El módulo {module} no tiene la función 'show'")
             except Exception as ex:
                     print(f"Error al manejar el clic: {ex}")
-                    show_alert(event, f'{e}')
+                    show_alert(e, f'{e}')
         
             # unidad = e.control.data[0]
             # method = e.control.data[1]
