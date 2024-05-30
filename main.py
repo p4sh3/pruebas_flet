@@ -11,6 +11,7 @@ import matplotlib as mpl
 from methods.widgets.widgets import open_dlg_modal, show_alert
 import methods.unidad2.biseccion
 import methods.unidad2.grafico
+import methods.unidad2.falsa_posicion
 
 # def import_modules(packages):
 
@@ -158,6 +159,7 @@ def main(page: ft.Page):
                             content=ft.Text("Falsa Posición"),
                             style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
                             on_click=method_click,
+                            data = ("unidad2", "falsa_posicion")
                         )
                     ]
                 ),
