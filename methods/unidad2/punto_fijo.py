@@ -1,6 +1,8 @@
 import flet as ft
 import sympy as sp
 import pandas as pd
+from sympy import *
+from sympy.core.numbers import ImaginaryUnit
 # from methods.unidad1.grafico import show as show_grafico
 from methods.widgets.widgets import show_alert, open_dlg_modal
 name = "Método de Bisección"
@@ -46,7 +48,7 @@ def solve(gx, x0, cifras): # codigo del algoritmo
 
     while True:
 
-        gxi = g_x.subs(x, xi)
+        gxi = g_x.subs(x, xi).evalf()
 
         Ea = abs(((gxi - aprox_anterior)/gxi)*100)
         rows.append(ft.DataRow(
@@ -89,19 +91,18 @@ def show(): # Muestra los resultados
             gx = validar_expresion(row.controls[0].value)
             x0 = float(row.controls[1].value)
             cifras = int(row.controls[2].value)
-            
+            x=sp.symbols('x')
             gx_prima = gx.diff(x)
-            convergencia = sp.Abs(gx_prima.subs(x, x0))
-            
-            try:
-                imag = float(sp.Abs(gx_prima.subs(x, x0)))
-                comprobacion = False   
-                
-            except:
-                comprobacion = True
-                
+            convergencia = gx_prima.subs(x, x0).evalf()
+            print(type(convergencia))
+            print(type(convergencia))
+            es_ima=sp.im(convergencia)
+            if es_ima != 0:
+                comprobacion=True
+            elif es_ima==0:
+                comprobacion=False     
             if cifras > 0:
-                if (convergencia < 1) and (comprobacion == True):
+                if (Abs(convergencia) < 1) and ( comprobacion == False):
                     try:
                         rows, gxi, Ea, metodo, iteracion = solve(gx, x0, cifras)
                         table.rows = rows
