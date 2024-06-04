@@ -96,7 +96,7 @@ def show(): # Muestra los resultados
             convergencia = gx_prima.subs(x, x0).evalf()
             print(type(convergencia))
             print(type(convergencia))
-            es_ima=sp.m(convergencia)
+            es_ima=sp.im(convergencia)
             if es_ima != 0:
                 comprobacion=True
             elif es_ima==0:
