@@ -79,6 +79,17 @@ def solve(fx, limite_inferior, limite_superior, cifras): # codigo del algoritmo
 
 def show(): # Muestra los resultados 
     
+    def clean(event):
+        container_results.visible = False
+        table.visible = False
+        row.controls[1].value = ''
+        row.controls[2].value = ''
+        row.controls[3].value = ''
+        row.controls[4].value = ''
+        
+        row.controls[1].autofocus = True
+        event.control.page.update()
+        
     def get_data(event): # asigna los datos ingresados a la funcion solve()
         try:
             fx = validar_expresion(row.controls[0].value)
@@ -96,7 +107,7 @@ def show(): # Muestra los resultados
                         table.rows = rows
                         table.visible = True
                         #Mostrar resultados
-                        lbl_root.content = ft.Text(value=f'Solucion: {raiz}', weight="bold", size=20)
+                        lbl_root.content = ft.Text(value=f'Solucion: {raiz}', weight="bold", size=20, text_align=ft.TextAlign.CENTER)
                         lbl_root.bgcolor = ft.colors.GREEN
                         lbl_root.padding = 10
                         lbl_root.border_radius = 25
@@ -122,7 +133,15 @@ def show(): # Muestra los resultados
         
     # Controles para que el usuario interactue
     row = ft.ResponsiveRow(
-        [
+        [   
+            ft.Text(
+                value=f'{name}',
+                col={"md": 12},
+                weight="bold",
+                size=20,
+                text_align=ft.TextAlign.CENTER            
+            ),
+            
             ft.TextField(
                 height=57,
                 label="Función", 
@@ -144,7 +163,13 @@ def show(): # Muestra los resultados
                 text="Resolver", 
                 on_click=get_data, 
                 width=100, 
-                height=45, col={"md":3}),
+                height=45, col={"md":2}),
+            
+            ft.ElevatedButton(
+                text="Limpiar", 
+                on_click=clean, 
+                width=100, 
+                height=45, col={"md":2}),
         ], 
         alignment=ft.MainAxisAlignment.CENTER,  
     )

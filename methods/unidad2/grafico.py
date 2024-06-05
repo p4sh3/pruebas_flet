@@ -162,7 +162,7 @@ def show():
         
         try:
             
-            fx = validar_expresion(row.controls[0].value)
+            fx = validar_expresion(row.controls[1].value)
         except ValueError as e:
             print(f"Error: {e}")
             show_alert(event, f'{e}')
@@ -174,6 +174,13 @@ def show():
         
     
     row = ft.ResponsiveRow([
+        ft.Text(
+            value=f'{name}',
+            col={"md": 12},
+            weight="bold",
+            size=20,
+            text_align=ft.TextAlign.CENTER            
+        ),
         ft.TextField(
             adaptive=True,
             label="Función",

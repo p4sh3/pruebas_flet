@@ -4,7 +4,7 @@ from sympy import *
 from sympy.core.numbers import *
 # from methods.unidad1.grafico import show as show_grafico
 from methods.widgets.widgets import show_alert, open_dlg_modal
-name = "Método de Secante"
+name = "Metodo Newton Raphson"
 
 
 def validar_expresion(expr):
@@ -24,65 +24,100 @@ def validar_expresion(expr):
         return sp.parse_expr(expr)
 
 
-def solve(fx, limite_inferior, limite_superior, cifras): # codigo del algoritmo
+def solve(fx, punto, cifras): # codigo del algoritmo
     rows = []
     x = sp.Symbol('x')
     
-    metodo = 'Secante'
+    metodo = 'Newton Raphson'
     Es = 0.5 * 10 ** (2 - cifras)
-
-    xi_1 = limite_inferior 
-    xi = limite_superior
+ 
+    xi = punto
     iteracion = 1
     aprox_anterior = 0
     aprox_actual = 0
     
-    while True:
-        fxi_1= fx.subs(x,xi_1).evalf()
-        fxi = fx.subs(x,xi).evalf()
+    #Criterio de convergencia
+    fx_prima = fx.diff(x)
+    fx2_prima = fx_prima.diff(x)
+    print(fx_prima)
+    print(fx2_prima)
+    
+    fxi= fx.subs(x, xi).evalf()
+    
+    fxi_prima = fx_prima.subs(x, xi).evalf()
+    fxi2_prima = fx2_prima.subs(x, xi).evalf()
+    
+    convergencia=Abs((fxi*fxi2_prima)/((fxi_prima)**2))
+    comprobacion=True
+    
+    if im(fxi) != 0 or isinstance(fxi,ComplexInfinity):
+        comprobacion=False
+        return rows, xi1, fx, None, metodo, iteracion, True, f"El punto inicial sale del dominio de la función {fx}"
+         
+    elif im(fxi_prima)!= 0 or isinstance(fxi_prima,ComplexInfinity):
+        comprobacion=False
+        return rows, xi1, fx, None, metodo, iteracion, True, f"El punto inicial sale del dominio de la derivada 1 {fx_prima} "
         
-        if im(fxi_1) != 0  or im(fxi) != 0 :
-            #en flet ponerle return true y texto para mensaje perzonalizado
-            rows.append(ft.DataRow(
-                cells=[ft.DataCell(ft.Text(str(cell))) for cell in [iteracion, xi_1, xi, fxi_1, fxi, None, None]],
-            ))
-            return rows, None, fx, None, metodo, iteracion, True, "Error, la fucion genero numeros imaginarios "
+    elif im(fxi2_prima) != 0 or isinstance(fxi2_prima,ComplexInfinity):
+        comprobacion=False
+        return rows, xi1, fx, None, metodo, iteracion, True, f"El punto inicial sale del dominio de la derivada 2 {fx} "
+    
+    elif isinstance(convergencia,ComplexInfinity) or isinstance(convergencia,NaN):
+        comprobacion=False
+        return rows, xi1, fx, Ea, metodo, iteracion, True, f"Se genero una division entre cero al calcular la convergencia "
+   
+    else:
+
+        print(comprobacion)    
+        print(convergencia)
+        print(type(convergencia))
         
-        elif isinstance(fxi_1, ComplexInfinity) or isinstance(fxi, ComplexInfinity):
-            rows.append(ft.DataRow(
-                cells=[ft.DataCell(ft.Text(str(cell))) for cell in [iteracion, xi_1, xi, fxi_1, fxi, None, None]],
-            ))
-            return rows, None, fx, None, metodo, iteracion, True, "Error, la fucion genero division entre cero"
-        
-        # #calculo para encontrar la raiz aproximada
-        xi1 =( xi - ((fxi*(xi_1 - xi))/(fxi_1 - fxi))).evalf()
-        
-        if isinstance(xi1, ComplexInfinity) or isinstance(xi1, NaN):
-            rows.append(ft.DataRow(
-                cells=[ft.DataCell(ft.Text(str(cell))) for cell in [iteracion, xi_1, xi, fxi_1, fxi, xi1, None]],
-            ))
-            return rows, xi1, fx, None, metodo, iteracion, True, "se genero divison entre 0 al calcular la aproximacion Xi+1"
-        
-        Ea = abs(((xi1 - aprox_anterior)/xi1)*100)
-        
-        if isinstance(Ea, ComplexInfinity) or isinstance(Ea,NaN) :
-            return rows, xi1, fx, Ea, metodo, iteracion, True, "Error, la se genero division entre 0 en el error aproximado en el Ea"
-        
-        rows.append(ft.DataRow(
-                cells=[ft.DataCell(ft.Text(str(cell))) for cell in [iteracion, xi_1, xi, fxi_1, fxi, xi1, Ea]],
-            ))
-        
-        if Ea <Es or iteracion == 100:
-            break
+        if convergencia < 1 :
+            while True: 
+                fxi= fx.subs(x, xi).evalf()
+                
+                if im(fxi)!=0 or isinstance(fxi,ComplexInfinity):
+                    return rows, xi1, fx, None, metodo, iteracion, True, f"El punto inicial sale del dominio de la función {fx} "
+                
+                #calculo de la derivada
+                fx_prima = fx.diff(x)
+                
+                #Se evalua el valor actual de xi en la primera derivada
+                fxi_prima= fx_prima.subs(x,xi).evalf()
+                
+                if im(fxi_prima)!=0 or isinstance(fxi_prima,ComplexInfinity):
+                    return rows, xi1, fx, None, metodo, iteracion, True, f"El punto inicial sale del dominio de la derivada {fx_prima} "
+                
+                #calculo para encontrar la raiz aproximada
+                xi1 = (xi - (fxi/fxi_prima))
+                
+                if  isinstance(xi1,ComplexInfinity):
+                    return rows, xi1, fx, None, metodo, iteracion, True, f"Al calcular la xi siguiente se genero una division entre cero "
+                
+                Ea = Abs(((xi1 - aprox_anterior)/xi1)*100).evalf()
+                
+                if  isinstance(Ea,ComplexInfinity) or isinstance(Ea,NaN):
+                    return rows, xi1, fx, Ea, metodo, iteracion, True, f"Al calcular la Ea se genero una division entre cero "
+            
+                rows.append(ft.DataRow(
+                        cells=[ft.DataCell(ft.Text(str(cell))) for cell in [iteracion, xi, fxi, fxi_prima, xi1, Ea]],
+                    ))
+            
+                if Ea < Es or iteracion == 100:
+                    break
+                else:
+                    xi = xi1
+                
+                aprox_anterior = xi1
+                iteracion += 1
+            
+            return rows, xi1, fx, Ea, metodo, iteracion, False, 'Se completo con exito' 
         
         else:
-            xi_1 = xi
-            xi = xi1
-    
-        aprox_anterior = xi1
-        iteracion += 1
+            if convergencia >= 1:
+                return rows, xi1, fx, None, metodo, iteracion, True, "El criterio de convergencia no se cumplio" 
         
-    return rows, xi1, fx, Ea, metodo, iteracion, False, 'Se completo con exito' 
+    
 
 
           
@@ -93,9 +128,7 @@ def show(): # Muestra los resultados
         table.visible = False
         row.controls[1].value = ''
         row.controls[2].value = ''
-        row.controls[3].value = ''
-        row.controls[4].value = ''
-        
+        row.controls[3].value = ''        
         row.controls[1].autofocus = True
         event.control.page.update()
     
@@ -109,11 +142,10 @@ def show(): # Muestra los resultados
             x=sp.symbols('x')
             
             fx = validar_expresion(row.controls[0].value)
-            limite_inferior = float(row.controls[1].value)
-            limite_superior = float(row.controls[2].value)
-            cifras = int(row.controls[3].value)
+            punto = float(row.controls[1].value)
+            cifras = int(row.controls[2].value)
 
-            rows, xi1, fx, Ea, metodo, iteracion, alert, messege = solve(fx, limite_inferior, limite_superior, cifras)
+            rows, xi1, fx, Ea, metodo, iteracion, alert, messege = solve(fx, punto, cifras)
             
             if cifras > 0:
                 if alert == True:
@@ -131,16 +163,12 @@ def show(): # Muestra los resultados
                     event.control.page.update()
                 else:                
                     try:
-                        # division_cero, mensaje =solve(gx, x0, cifras)
-
-                            #if division_cero==True:
-                            # show_alert(event, mensaje)
-                        # else:    
-                        rows, xi1, fx, Ea, metodo, iteracion, alert, messege = solve(fx, limite_inferior, limite_superior, cifras)
+  
+                        rows, xi1, fx, Ea, metodo, iteracion, alert, messege = solve(fx, punto, cifras)
                         table.rows = rows
                         table.visible = True
                             
-                            #Mostrar resultados
+                         #Mostrar resultados
                         lbl_root.content = ft.Text(value=f'Solucion: {xi1}', weight="bold", size=20, text_align=ft.TextAlign.CENTER)
                         lbl_root.bgcolor = ft.colors.GREEN
                         lbl_root.padding = 10
@@ -163,50 +191,48 @@ def show(): # Muestra los resultados
         
     # Controles para que el usuario interactue
     row = ft.ResponsiveRow(
-        [   
-            ft.Text(
-                value=f'{name}',
-                col={"md": 12},
-                weight="bold",
-                size=20,
-                text_align=ft.TextAlign.CENTER            
+        [   ft.Text(
+            value=f'{name}',
+            col={"md": 12},
+            weight="bold",
+            size=20,
+            text_align=ft.TextAlign.CENTER            
             ),
+         
             ft.TextField(
                 height=57,
                 label="Funcion", 
                 autofocus=True,
                 suffix=ft.IconButton(
                     icon=ft.icons.HELP_OUTLINE_OUTLINED, on_click=open_dlg_modal),
-                col={"md": 3}),
+                col={"md": 4}),
+            
             ft.TextField(
-                label="Limite inferiror",
-                col={"md": 3}),
-            ft.TextField(
-                label="Limite superior",
-                col={"md": 3}),
-          
+                label="Punto",
+                col={"md": 4}),
+            
             ft.TextField(
                 label="Cifras Significativas", 
-                col={"md": 3}),
+                col={"md": 4}),
             
             ft.ElevatedButton(
                 text="Resolver", 
                 on_click=get_data, 
                 width=100, 
-                height=45, col={"md":3}),
+                height=45, col={"md":2}),
             
             ft.ElevatedButton(
                 text="Limpiar", 
                 on_click=clean, 
                 width=100, 
-                height=45, col={"md":3}),
+                height=45, col={"md":2}),
         ], 
         alignment=ft.MainAxisAlignment.CENTER,  
     )
 
     # Tabla de flet que almacena los resuultados del algoritmo
     table = ft.DataTable(
-        columns=[ft.DataColumn(ft.Text(col)) for col in ["Iteracion", " Xi-1", "Xi", "f(Xi-1)", "f(Xi)", "Xi+1", "Error Aproximado"]],
+        columns=[ft.DataColumn(ft.Text(col)) for col in ["Iteracion", " Xi", "f(Xi)", "f'(Xi)", "Xi+1", "Error Aproximado"]],
         rows=[],
         visible=False
     )

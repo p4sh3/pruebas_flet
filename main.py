@@ -14,6 +14,7 @@ import methods.unidad2.grafico
 import methods.unidad2.falsa_posicion
 import methods.unidad2.punto_fijo
 import methods.unidad2.secante
+import methods.unidad2.newton_raphson
 
 # def import_modules(packages):
 
@@ -125,7 +126,7 @@ def main(page: ft.Page):
 
         
         app_bar = ft.AppBar(
-            title=ft.Text("Mi Aplicación"),
+            title=ft.Text('Proyecto analisis numerico'),
             center_title=True, 
             bgcolor=ft.colors.SURFACE_VARIANT,
             actions=[
@@ -174,6 +175,12 @@ def main(page: ft.Page):
                             style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
                             on_click=method_click,
                             data = ("unidad2", "secante")
+                        ),
+                        ft.MenuItemButton(
+                            content=ft.Text("Newton Raphson"),
+                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
+                            on_click=method_click,
+                            data = ("unidad2", "newton_raphson")
                         )
                     ]
                 ),
