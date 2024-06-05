@@ -2,7 +2,7 @@ import flet as ft
 import sympy as sp
 import pandas as pd
 from sympy import *
-from sympy.core.numbers import ImaginaryUnit
+from sympy.core.numbers import *
 # from methods.unidad1.grafico import show as show_grafico
 from methods.widgets.widgets import show_alert, open_dlg_modal
 name = "Método de Bisección"
@@ -37,6 +37,7 @@ def solve(gx, x0, cifras): # codigo del algoritmo
     
     metodo = 'Punto fijo'
     Es = 0.5 * 10 ** (2 - cifras)
+
     xi = x0
     iteracion = 1
     aprox_anterior = 0
@@ -45,24 +46,28 @@ def solve(gx, x0, cifras): # codigo del algoritmo
     g_x = gx
 
     df = pd.DataFrame(columns=["Iteracion", " Xi", "g(X)", "Error Aproximado"])
-
+    
     while True:
-
-        gxi = g_x.subs(x, xi).evalf()
-
-        Ea = abs(((gxi - aprox_anterior)/gxi)*100)
-        rows.append(ft.DataRow(
-            cells=[ft.DataCell(ft.Text(str(cell))) for cell in [iteracion, xi, gxi, Ea]],
-        ))
-        df.loc[iteracion-1] = [iteracion, xi, gxi, Ea,]
-        
-        if Ea < Es:
-            break
-        else:
-            xi = gxi
-            
-        aprox_anterior = gxi
-        iteracion += 1
+        try:
+            gxi = g_x.subs(x, xi).evalf()
+           # if im(gxi)!=0:
+           #     return True, "Se generaron numeros imaginarios, al calcular las iteraciones"
+           # else:
+            Ea = abs(((gxi - aprox_anterior)/gxi)*100)
+            rows.append(ft.DataRow(
+                cells=[ft.DataCell(ft.Text(str(cell))) for cell in [iteracion, xi, gxi, Ea]],
+            ))
+            #df.loc[iteracion-1] = [iteracion, xi, gxi, Ea,]
+                
+            if Ea < Es or iteracion==100 :
+                break
+            else:
+                xi = gxi
+                    
+            aprox_anterior = gxi
+            iteracion += 1
+        except  ZeroDivisionError as e: 
+            return True, "Se genero una division entre cero, al calcular las iteraciones"  
         
     return rows, gxi, Ea, metodo, iteracion 
 
@@ -93,9 +98,10 @@ def show(): # Muestra los resultados
             cifras = int(row.controls[2].value)
             x=sp.symbols('x')
             gx_prima = gx.diff(x)
-            convergencia = gx_prima.subs(x, x0).evalf()
+            print(gx_prima)
+            convergencia = gx_prima.subs(x, x0).evalf()   
             print(type(convergencia))
-            print(type(convergencia))
+            print(convergencia)
             es_ima=sp.im(convergencia)
             if es_ima != 0:
                 comprobacion=True
@@ -104,6 +110,11 @@ def show(): # Muestra los resultados
             if cifras > 0:
                 if (Abs(convergencia) < 1) and ( comprobacion == False):
                     try:
+                       # division_cero, mensaje =solve(gx, x0, cifras)
+
+                        #if division_cero==True:
+                           # show_alert(event, mensaje)
+                       # else:    
                         rows, gxi, Ea, metodo, iteracion = solve(gx, x0, cifras)
                         table.rows = rows
                         table.visible = True
@@ -119,8 +130,15 @@ def show(): # Muestra los resultados
                                 print(f"Error: {e}")
                                 show_alert(event, f'Ingrese una funcion valida {e}')
                    
-                else: 
-                    show_alert(event, 'No converge')
+                else:
+                    if isinstance(convergencia,ComplexInfinity)==True:
+                        show_alert(event, f'El punto:{x0} genera una division entre') 
+                    elif Abs(convergencia)>=1:
+                        show_alert(event, f'El punto:{x0} no converge\nCriterio de convergencia:{Abs(convergencia)}')
+                    elif comprobacion==True:   
+                        show_alert(event, f'El punto:{x0} genera numeros imaginarios\nPor lo tanto no cumple con el criterio de convergencia')
+                  
+
             else:
                  show_alert(event, 'Las cifras significativas deben ser mayor a cero')
     
