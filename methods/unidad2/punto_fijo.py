@@ -93,15 +93,19 @@ def show(): # Muestra los resultados
      
         
         try:
-            gx = validar_expresion(row.controls[0].value)
-            x0 = float(row.controls[1].value)
-            cifras = int(row.controls[2].value)
+            gx = validar_expresion(row.controls[1].value)
+            x0 = float(row.controls[2].value)
+            cifras = int(row.controls[3].value)
+            
             x=sp.symbols('x')
+            
             gx_prima = gx.diff(x)
             print(gx_prima)
+            
             convergencia = gx_prima.subs(x, x0).evalf()   
             print(type(convergencia))
             print(convergencia)
+            
             es_ima=sp.im(convergencia)
             if es_ima != 0:
                 comprobacion=True
@@ -109,15 +113,11 @@ def show(): # Muestra los resultados
                 comprobacion=False     
             if cifras > 0:
                 if (Abs(convergencia) < 1) and ( comprobacion == False):
-                    try:
-                       # division_cero, mensaje =solve(gx, x0, cifras)
-
-                        #if division_cero==True:
-                           # show_alert(event, mensaje)
-                       # else:    
+                    try:  
                         rows, gxi, Ea, metodo, iteracion = solve(gx, x0, cifras)
                         table.rows = rows
                         table.visible = True
+                        
                         #Mostrar resultados
                         lbl_root.content = ft.Text(value=f'Solucion: {gxi}', weight="bold", size=20, text_align=ft.TextAlign.CENTER)
                         lbl_root.bgcolor = ft.colors.GREEN

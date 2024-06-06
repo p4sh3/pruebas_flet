@@ -15,6 +15,7 @@ import methods.unidad2.falsa_posicion
 import methods.unidad2.punto_fijo
 import methods.unidad2.secante
 import methods.unidad2.newton_raphson
+import methods.unidad2.newton_raphson_mod
 
 # def import_modules(packages):
 
@@ -133,14 +134,16 @@ def main(page: ft.Page):
                 ft.IconButton(
                     icon=ft.icons.HELP_OUTLINE_OUTLINED,
                     on_click=open_dlg_modal,
-                )
+                ),
             ]
         )
+        
+  
 
         
         menubar = ft.MenuBar(
             expand=True,
-            style= ft.MenuStyle(bgcolor=ft.colors.BLUE),
+            style= ft.MenuStyle(bgcolor=ft.colors.SURFACE_VARIANT),
             controls=[
                 ft.SubmenuButton(
                     content=ft.Text("Unidad 2"),
@@ -181,6 +184,12 @@ def main(page: ft.Page):
                             style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
                             on_click=method_click,
                             data = ("unidad2", "newton_raphson")
+                        ),
+                        ft.MenuItemButton(
+                            content=ft.Text("Newton Raphson moficado"),
+                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
+                            on_click=method_click,
+                            data = ("unidad2", "newton_raphson_mod")
                         )
                     ]
                 ),
@@ -210,6 +219,8 @@ def main(page: ft.Page):
             ]
         )
 
+      
+     
         page.add(
             app_bar,
             ft.ResponsiveRow([ menubar]),

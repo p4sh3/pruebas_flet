@@ -4,7 +4,7 @@ from sympy import *
 from sympy.core.numbers import *
 # from methods.unidad1.grafico import show as show_grafico
 from methods.widgets.widgets import show_alert, open_dlg_modal
-name = "Metodo Newton Raphson"
+name = "Método de Newton Raphson"
 
 
 def validar_expresion(expr):
@@ -141,9 +141,9 @@ def show(): # Muestra los resultados
         try:
             x=sp.symbols('x')
             
-            fx = validar_expresion(row.controls[0].value)
-            punto = float(row.controls[1].value)
-            cifras = int(row.controls[2].value)
+            fx = validar_expresion(row.controls[1].value)
+            punto = float(row.controls[2].value)
+            cifras = int(row.controls[3].value)
 
             rows, xi1, fx, Ea, metodo, iteracion, alert, messege = solve(fx, punto, cifras)
             

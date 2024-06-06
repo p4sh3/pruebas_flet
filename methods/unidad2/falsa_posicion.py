@@ -89,10 +89,10 @@ def show(): # Muestra los resultados
         
     def get_data(event): # asigna los datos ingresados a la funcion solve()
         try:
-            fx = validar_expresion(row.controls[0].value)
-            limite_inferior = float(row.controls[1].value)
-            limite_superior = float(row.controls[2].value)
-            cifras = int(row.controls[3].value)
+            fx = validar_expresion(row.controls[1].value)
+            limite_inferior = float(row.controls[2].value)
+            limite_superior = float(row.controls[3].value)
+            cifras = int(row.controls[4].value)
             x = sp.Symbol('x')
             f_x1 = fx.subs(x, limite_inferior).evalf()
             f_xu = fx.subs(x, limite_superior).evalf()
