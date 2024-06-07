@@ -43,10 +43,9 @@ def solve(polinomio): # codigo del algoritmo
         raiz1= (-(b) + (sqrt((b**2) - 4*(a*c))) ) / (2*a).evalf()
         # raiz2=((-(b) - sqrt(((b)**2)-4*a*c))/2*a).evalf()
         raiz2 = (-(b) - (sqrt((b**2) - 4*(a*c))) ) / (2*a).evalf()
-        print(f"la raiz x_1: {raiz1}")
-        print(f"la raiz x_2: {raiz2}")
         message = f'a: {a}\t\t\t\tb: {b}\t\t\t\tc: {c}'
         message2 = f'La ecuacion {polinomio} tiene dos raices\nRaiz 1: {raiz1}\nRaiz 2: {raiz2}'
+        
         return message, message2, False
     else :
         message = f"La ecuacion ingresada es de grado {len(coeficientes)-1} \npor lo tanto el metodo cuadratico no puede dar una solucion."
