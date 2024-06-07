@@ -5,7 +5,7 @@ from sympy import *
 from sympy.core.numbers import *
 # from methods.unidad1.grafico import show as show_grafico
 from methods.widgets.widgets import show_alert, open_dlg_modal
-name = "Método de Bisección"
+name = "Método de Punto fijo"
 
 
 def validar_expresion(expr):
@@ -78,11 +78,11 @@ def show(): # Muestra los resultados
     def clean(event):
         container_results.visible = False
         table.visible = False
-        row.controls[0].value = ''
         row.controls[1].value = ''
         row.controls[2].value = ''
+        row.controls[3].value = ''
         
-        row.controls[0].autofocus = True
+        row.controls[1].autofocus = True
         event.control.page.update()
     
     def get_data(event): # asigna los datos ingresados a la funcion solve()
@@ -93,15 +93,19 @@ def show(): # Muestra los resultados
      
         
         try:
-            gx = validar_expresion(row.controls[0].value)
-            x0 = float(row.controls[1].value)
-            cifras = int(row.controls[2].value)
+            gx = validar_expresion(row.controls[1].value)
+            x0 = float(row.controls[2].value)
+            cifras = int(row.controls[3].value)
+            
             x=sp.symbols('x')
+            
             gx_prima = gx.diff(x)
             print(gx_prima)
+            
             convergencia = gx_prima.subs(x, x0).evalf()   
             print(type(convergencia))
             print(convergencia)
+            
             es_ima=sp.im(convergencia)
             if es_ima != 0:
                 comprobacion=True
@@ -109,15 +113,11 @@ def show(): # Muestra los resultados
                 comprobacion=False     
             if cifras > 0:
                 if (Abs(convergencia) < 1) and ( comprobacion == False):
-                    try:
-                       # division_cero, mensaje =solve(gx, x0, cifras)
-
-                        #if division_cero==True:
-                           # show_alert(event, mensaje)
-                       # else:    
+                    try:  
                         rows, gxi, Ea, metodo, iteracion = solve(gx, x0, cifras)
                         table.rows = rows
                         table.visible = True
+                        
                         #Mostrar resultados
                         lbl_root.content = ft.Text(value=f'Solucion: {gxi}', weight="bold", size=20, text_align=ft.TextAlign.CENTER)
                         lbl_root.bgcolor = ft.colors.GREEN
@@ -148,32 +148,41 @@ def show(): # Muestra los resultados
         
     # Controles para que el usuario interactue
     row = ft.ResponsiveRow(
-        [
+        [   
+            ft.Text(
+                value=f'{name}',
+                col={"md": 12},
+                weight="bold",
+                size=20,
+                text_align=ft.TextAlign.CENTER            
+            ),
             ft.TextField(
                 height=57,
                 label="g(x)", 
                 autofocus=True,
                 suffix=ft.IconButton(
                     icon=ft.icons.HELP_OUTLINE_OUTLINED, on_click=open_dlg_modal),
-                col={"md": 3}),
+                col={"md": 4}),
+            
             ft.TextField(
                 label="Punto X0",
-                col={"md": 3}),
+                col={"md": 4}),
           
             ft.TextField(
                 label="Cifras Significativas", 
-                col={"md": 3}),
+                col={"md": 4}),
             
             ft.ElevatedButton(
                 text="Resolver", 
                 on_click=get_data, 
                 width=100, 
-                height=45, col={"md":3}),
+                height=45, col={"md":2}),
+            
             ft.ElevatedButton(
                 text="Limpiar", 
                 on_click=clean, 
                 width=100, 
-                height=45, col={"md":3}),
+                height=45, col={"md":2}),
         ], 
         alignment=ft.MainAxisAlignment.CENTER,  
     )

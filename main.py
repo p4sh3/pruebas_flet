@@ -14,6 +14,11 @@ import methods.unidad2.grafico
 import methods.unidad2.falsa_posicion
 import methods.unidad2.punto_fijo
 import methods.unidad2.secante
+import methods.unidad2.newton_raphson
+import methods.unidad2.newton_raphson_mod
+import methods.unidad2.tartaglia
+import methods.unidad2.cuadratica
+import methods.unidad2.ferrari
 
 # def import_modules(packages):
 
@@ -125,21 +130,23 @@ def main(page: ft.Page):
 
         
         app_bar = ft.AppBar(
-            title=ft.Text("Mi Aplicación"),
+            title=ft.Text('Proyecto analisis numerico'),
             center_title=True, 
             bgcolor=ft.colors.SURFACE_VARIANT,
             actions=[
                 ft.IconButton(
                     icon=ft.icons.HELP_OUTLINE_OUTLINED,
                     on_click=open_dlg_modal,
-                )
+                ),
             ]
         )
+        
+  
 
         
         menubar = ft.MenuBar(
             expand=True,
-            style= ft.MenuStyle(bgcolor=ft.colors.BLUE),
+            style= ft.MenuStyle(bgcolor=ft.colors.SURFACE_VARIANT),
             controls=[
                 ft.SubmenuButton(
                     content=ft.Text("Unidad 2"),
@@ -174,6 +181,36 @@ def main(page: ft.Page):
                             style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
                             on_click=method_click,
                             data = ("unidad2", "secante")
+                        ),
+                        ft.MenuItemButton(
+                            content=ft.Text("Newton Raphson"),
+                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
+                            on_click=method_click,
+                            data = ("unidad2", "newton_raphson")
+                        ),
+                        ft.MenuItemButton(
+                            content=ft.Text("Newton Raphson moficado"),
+                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
+                            on_click=method_click,
+                            data = ("unidad2", "newton_raphson_mod")
+                        ),
+                        ft.MenuItemButton(
+                            content=ft.Text("Tartaglia"),
+                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
+                            on_click=method_click,
+                            data = ("unidad2", "tartaglia")
+                        ),
+                        ft.MenuItemButton(
+                            content=ft.Text("Cudratica"),
+                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
+                            on_click=method_click,
+                            data = ("unidad2", "cuadratica")
+                        ),
+                        ft.MenuItemButton(
+                            content=ft.Text("Ferrari"),
+                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
+                            on_click=method_click,
+                            data = ("unidad2", "ferrari")
                         )
                     ]
                 ),
@@ -203,6 +240,8 @@ def main(page: ft.Page):
             ]
         )
 
+      
+     
         page.add(
             app_bar,
             ft.ResponsiveRow([ menubar]),

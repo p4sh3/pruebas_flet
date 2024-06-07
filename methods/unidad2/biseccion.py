@@ -79,16 +79,28 @@ def solve(fx, limite_inferior, limite_superior, cifras): # codigo del algoritmo
 
 def show(): # Muestra los resultados 
     
+    def clean(event):
+        container_results.visible = False
+        table.visible = False
+        row.controls[1].value = ''
+        row.controls[2].value = ''
+        row.controls[3].value = ''
+        row.controls[4].value = ''
+        
+        row.controls[1].autofocus = True
+        event.control.page.update()
+        
     def get_data(event): # asigna los datos ingresados a la funcion solve()
         try:
-            fx = validar_expresion(row.controls[0].value)
-            limite_inferior = float(row.controls[1].value)
-            limite_superior = float(row.controls[2].value)
-            cifras = int(row.controls[3].value)
+            fx = validar_expresion(row.controls[1].value)
+            limite_inferior = float(row.controls[2].value)
+            limite_superior = float(row.controls[3].value)
+            cifras = int(row.controls[4].value)
             x = sp.Symbol('x')
             f_x1 = fx.subs(x, limite_inferior).evalf()
             f_xu = fx.subs(x, limite_superior).evalf()
             
+<<<<<<< HEAD
             if f_x1.is_real and f_xu.is_real :
                 if (f_x1 > 0 and f_xu < 0 and cifras >= 0 ) or (f_x1 < 0 and f_xu > 0 and cifras >= 0 ) :
                     if(limite_superior > limite_inferior):
@@ -119,6 +131,34 @@ def show(): # Muestra los resultados
             else:
                 show_alert(event,f"La funcion evaluo un numero que no esta en su dominio")            
                 
+=======
+            if (f_x1 > 0 and f_xu < 0 and cifras >= 0) or (f_x1 < 0 and f_xu > 0 and cifras >= 0):
+                if(limite_superior > limite_inferior):
+                    try: 
+                        rows, raiz, iteracion, Ea, fx, metodo = solve(fx, limite_inferior, limite_superior, cifras)
+                        table.rows = rows
+                        table.visible = True
+                        #Mostrar resultados
+                        lbl_root.content = ft.Text(value=f'Solucion: {raiz}', weight="bold", size=20, text_align=ft.TextAlign.CENTER)
+                        lbl_root.bgcolor = ft.colors.GREEN
+                        lbl_root.padding = 10
+                        lbl_root.border_radius = 25
+                        lbl_root.width = 100
+                        lbl_results.value = f'Metodo: {metodo}\nFuncion {fx}\nCon {iteracion} iteraciones\nError porcentual aproximado {Ea}%'
+                        container_results.visible=True
+                        
+                        event.control.page.update()
+                    except ValueError as e:
+                        print(f"Error: {e}")
+                        show_alert(event, f'Ingrese una funcion valida {e}')
+                else:
+                    show_alert(event, 'El limite inferior no puede ser mayor que el el limite superior')
+            else: 
+                if cifras < 0:
+                    show_alert(event, 'Las cifras significativas deben ser mayor a cero')
+                else:   
+                    show_alert(event, f'En el intervalo [{limite_inferior}, {limite_superior}] no existe una raiz')
+>>>>>>> f23ff9a2a86fae1157b161ba3df09397511e03f8
               
         except ValueError as e:
             print(f"Error: {e}")
@@ -126,7 +166,15 @@ def show(): # Muestra los resultados
         
     # Controles para que el usuario interactue
     row = ft.ResponsiveRow(
-        [
+        [   
+            ft.Text(
+                value=f'{name}',
+                col={"md": 12},
+                weight="bold",
+                size=20,
+                text_align=ft.TextAlign.CENTER            
+            ),
+            
             ft.TextField(
                 height=57,
                 label="Función", 
@@ -148,7 +196,13 @@ def show(): # Muestra los resultados
                 text="Resolver", 
                 on_click=get_data, 
                 width=100, 
-                height=45, col={"md":3}),
+                height=45, col={"md":2}),
+            
+            ft.ElevatedButton(
+                text="Limpiar", 
+                on_click=clean, 
+                width=100, 
+                height=45, col={"md":2}),
         ], 
         alignment=ft.MainAxisAlignment.CENTER,  
     )
