@@ -17,6 +17,7 @@ import methods.unidad2.secante
 import methods.unidad2.newton_raphson
 import methods.unidad2.newton_raphson_mod
 import methods.unidad2.tartaglia
+import methods.unidad2.cuadratica
 
 # def import_modules(packages):
 
@@ -197,6 +198,12 @@ def main(page: ft.Page):
                             style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
                             on_click=method_click,
                             data = ("unidad2", "tartaglia")
+                        ),
+                        ft.MenuItemButton(
+                            content=ft.Text("Cudratica"),
+                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
+                            on_click=method_click,
+                            data = ("unidad2", "cuadratica")
                         )
                     ]
                 ),
@@ -235,4 +242,4 @@ def main(page: ft.Page):
         )
 
 
-ft.app(target=main, view=ft.WEB_BROWSER)
+ft.app(target=main)

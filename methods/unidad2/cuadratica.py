@@ -4,7 +4,7 @@ from sympy import *
 from sympy.core.numbers import *
 # from methods.unidad1.grafico import show as show_grafico
 from methods.widgets.widgets import show_alert, open_dlg_modal
-name = "Método de Tartaglia"
+name = "Cuadratica"
 
 
 def validar_expresion(expr):
@@ -26,65 +26,30 @@ def validar_expresion(expr):
 
 def solve(polinomio): # codigo del algoritmo
     x = sp.symbols('x')
-    
-    polinomio_polu = Poly(polinomio)
-    coeficientes = polinomio_polu.all_coeffs()
-    
-    if len(coeficientes) == 4:
-        i = 0
-        divisor=coeficientes[0]
+    try:
+        polinomio_polu=Poly(polinomio)
+    except SympifyError:
+        #aqui se debe de detener el codigo, esto se le debe agragar a Tartaglia
+        message = f"Error: La funcion ingresada no es una expresion simbolica valida"
+        return message, None, True 
         
-        while i < len(coeficientes):
-            coeficientes[i] = coeficientes[i]/divisor
-            i = i+1
-        a, b, c = coeficientes[1:]    
-        p = (3*b - a**2)/3
-        q = (2*a**3 - 9*a*b + 27*c)/27
-        discriminante = (q/2)**2 + (p/3)**3
- 
-        if discriminante == 0:
-            if p == 0 and q == 0:
-                raiz =-(a/3)
-               
-                message = f'P: {p}\t\t\t\tQ: {q}\t\t\t\tDiscriminante: {discriminante}'
-                messge2 = f'La ecuacion {polinomio} tiene 3 raices iguales\nRaiz Raiz 1: {raiz}\nRaiz 2: {raiz}\nRaiz 3: {raiz}'
-              
-                return message, message2, False
-            else:
-                raiz_1 = -((3*q)/(2*p)) - (a/3)
-                raiz_2 = -(4*(p**2))/(9*q) - (a/3)
-               
-                message = f'P: {p}\t\t\t\tQ: {q}\t\t\t\tDiscriminante: {discriminante}'
-                message2 = f'La ecuacion {polinomio} tiene 3 raices, 2 iguales  y 1 diferente\nRaiz 1: {raiz_1}\nRaiz 2: {raiz_1}\nRaiz 3: {raiz_2}'
-                
-                return message, message2, False
-                
-                
-        elif discriminante > 0:
-            raiz_real = real_root(cbrt(-(q/2) + sqrt(discriminante)) + cbrt(-(q/2) - sqrt(discriminante)) - (a/3)).evalf()
-            u = real_root( cbrt(-(q/2) + sqrt(discriminante))).evalf(n=14)
-            v = real_root(cbrt(-(q/2) - sqrt(discriminante))).evalf(n=14)
-            raiz_imaginaria = (-(u + v)/2) - (a/3) 
-            raiz_2imaginaria = ((sqrt(3)/2) * (u - v) * I).evalf()
-                        
-            message = f'P: {p}\t\t\t\tQ: {q}\t\t\t\tDiscriminante: {discriminante}\t\t\t\tU: {u}\t\t\t\tV: {u}'
-            message2 =  f'La ecuación {polinomio} tiene 3 raices, 2 iguales imaginarias  y 1 real\nRaiz imaginarias 1: {raiz_imaginaria} +{raiz_2imaginaria}\nRaiz imaginarias 2: {raiz_imaginaria} -{raiz_2imaginaria}\nRaiz 3 real: {raiz_real}'
-            
-            return message, message2, False
-
-        elif discriminante < 0: 
-            arcocoseno = real_root(acos((-q/2)/(sqrt(-(p/3)**3)))).evalf()
-            raiz1 = real_root(2*sqrt(-p/3)*cos((arcocoseno+2*0*pi)/3)-(a/3)).evalf()
-            raiz2 = real_root(2*sqrt(-p/3)*cos((arcocoseno+2*1*pi)/3)-(a/3)).evalf()
-            raiz3 = real_root(2*sqrt(-p/3)*cos((arcocoseno+2*2*pi)/3)-(a/3)).evalf()
-       
-            
-            message = f'P: {p}\t\t\t\tQ: {q}\t\t\t\tDiscriminante: {discriminante}'
-            message2 = f'La ecuacion {polinomio} tiene 3 raices reales\nRaiz Raiz 1: {raiz1}\nRaiz 2: {raiz2}\nRaiz 3: {raiz3}'
-            return message, message2, False
+    coeficientes=polinomio_polu.all_coeffs()
+    if len(coeficientes)==3:
+        i=0
+        a,b,c=coeficientes[:]    
+        print(a)
+        print(b)
+        print(c)
+        raiz1= (-(b) + (sqrt((b**2) - 4*(a*c))) ) / (2*a).evalf()
+        # raiz2=((-(b) - sqrt(((b)**2)-4*a*c))/2*a).evalf()
+        raiz2 = (-(b) - (sqrt((b**2) - 4*(a*c))) ) / (2*a).evalf()
+        print(f"la raiz x_1: {raiz1}")
+        print(f"la raiz x_2: {raiz2}")
+        message = f'a: {a}\t\t\t\tb: {b}\t\t\t\tc: {c}'
+        message2 = f'La ecuacion {polinomio} tiene dos raices\nRaiz 1: {raiz1}\nRaiz 2: {raiz2}'
+        return message, message2, False
     else :
-        message = f"La ecuacion ingresada es de grado {len(coeficientes)-1} \npor lo tanto el metodo Tartaglia no puede dar una solucion."        
-        
+        message = f"La ecuacion ingresada es de grado {len(coeficientes)-1} \npor lo tanto el metodo cuadratico no puede dar una solucion."
         return message, None, True
         
 def show(): # Muestra los resultados 
@@ -138,7 +103,7 @@ def show(): # Muestra los resultados
             ),
             ft.TextField(
                 height=57,
-                label="Polinomio", 
+                label="Polinomio grado 2", 
                 autofocus=True,
                 suffix=ft.IconButton(
                     icon=ft.icons.HELP_OUTLINE_OUTLINED, on_click=open_dlg_modal),
