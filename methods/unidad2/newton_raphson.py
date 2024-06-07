@@ -34,13 +34,11 @@ def solve(fx, punto, cifras): # codigo del algoritmo
     xi = punto
     iteracion = 1
     aprox_anterior = 0
-    aprox_actual = 0
     
     #Criterio de convergencia
     fx_prima = fx.diff(x)
     fx2_prima = fx_prima.diff(x)
-    print(fx_prima)
-    print(fx2_prima)
+
     
     fxi= fx.subs(x, xi).evalf()
     
@@ -67,11 +65,6 @@ def solve(fx, punto, cifras): # codigo del algoritmo
         return rows, xi1, fx, Ea, metodo, iteracion, True, f"Se genero una division entre cero al calcular la convergencia "
    
     else:
-
-        print(comprobacion)    
-        print(convergencia)
-        print(type(convergencia))
-        
         if convergencia < 1 :
             while True: 
                 fxi= fx.subs(x, xi).evalf()
@@ -115,7 +108,7 @@ def solve(fx, punto, cifras): # codigo del algoritmo
         
         else:
             if convergencia >= 1:
-                return rows, xi1, fx, None, metodo, iteracion, True, "El criterio de convergencia no se cumplio" 
+                return None, None, fx, None, metodo, None, True, "El criterio de convergencia no se cumplio" 
         
     
 

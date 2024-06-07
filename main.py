@@ -16,6 +16,7 @@ import methods.unidad2.punto_fijo
 import methods.unidad2.secante
 import methods.unidad2.newton_raphson
 import methods.unidad2.newton_raphson_mod
+import methods.unidad2.tartaglia
 
 # def import_modules(packages):
 
@@ -190,6 +191,12 @@ def main(page: ft.Page):
                             style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
                             on_click=method_click,
                             data = ("unidad2", "newton_raphson_mod")
+                        ),
+                        ft.MenuItemButton(
+                            content=ft.Text("Tartaglia"),
+                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
+                            on_click=method_click,
+                            data = ("unidad2", "tartaglia")
                         )
                     ]
                 ),
@@ -228,4 +235,4 @@ def main(page: ft.Page):
         )
 
 
-ft.app(target=main)
+ft.app(target=main, view=ft.WEB_BROWSER)
