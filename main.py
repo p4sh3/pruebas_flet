@@ -18,6 +18,7 @@ import methods.unidad2.newton_raphson
 import methods.unidad2.newton_raphson_mod
 import methods.unidad2.tartaglia
 import methods.unidad2.cuadratica
+import methods.unidad2.ferrari
 
 # def import_modules(packages):
 
@@ -204,6 +205,12 @@ def main(page: ft.Page):
                             style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
                             on_click=method_click,
                             data = ("unidad2", "cuadratica")
+                        ),
+                        ft.MenuItemButton(
+                            content=ft.Text("Ferrari"),
+                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
+                            on_click=method_click,
+                            data = ("unidad2", "ferrari")
                         )
                     ]
                 ),

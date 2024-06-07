@@ -28,7 +28,7 @@ def solve(polinomio): # codigo del algoritmo
     x = sp.symbols('x')
     try:
         polinomio_polu=Poly(polinomio)
-    except SympifyError:
+    except GeneratorsNeeded:
         #aqui se debe de detener el codigo, esto se le debe agragar a Tartaglia
         message = f"Error: La funcion ingresada no es una expresion simbolica valida"
         return message, None, True 
@@ -36,10 +36,8 @@ def solve(polinomio): # codigo del algoritmo
     coeficientes=polinomio_polu.all_coeffs()
     if len(coeficientes)==3:
         i=0
-        a,b,c=coeficientes[:]    
-        print(a)
-        print(b)
-        print(c)
+        a, b, c = coeficientes[:]    
+       
         raiz1= (-(b) + (sqrt((b**2) - 4*(a*c))) ) / (2*a).evalf()
         # raiz2=((-(b) - sqrt(((b)**2)-4*a*c))/2*a).evalf()
         raiz2 = (-(b) - (sqrt((b**2) - 4*(a*c))) ) / (2*a).evalf()

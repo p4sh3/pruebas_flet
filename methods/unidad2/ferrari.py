@@ -35,65 +35,65 @@ def solve(polinomio): # codigo del algoritmo
         return message, None, True 
     
     polinomio_poli = Poly(polinomio)
-    
-    
+     
     coeficientes = polinomio_poli.all_coeffs()
     
-    if len(coeficientes) == 4:
+    if len(coeficientes) == 5:
         i = 0
-        divisor=coeficientes[0]
+        divisor = coeficientes[0]
         
-        while i < len(coeficientes):
-            coeficientes[i] = coeficientes[i]/divisor
-            i = i+1
-        a, b, c = coeficientes[1:]    
-        p = (3*b - a**2)/3
-        q = (2*a**3 - 9*a*b + 27*c)/27
-        discriminante = (q/2)**2 + (p/3)**3
- 
+        while i<len(coeficientes):
+            coeficientes[i]=coeficientes[i]/divisor
+            i=i+1
+                
+        a, b, c, d = coeficientes[1:]
+        
+        p = (8*b - 3*a**2)/8
+        q = (8*c - 4*a*b + a**3)/8
+        r = (256*d - 64*a*c +16*(a**2)*b - 3*a**4)/256
+        
+        coeficientes_nuevos = 1,-(p/2),-(r),(4*p*r-q**2)/8
+    
+        a2, b2, c2 = coeficientes_nuevos[1:]
+        p2 = (3*b2 - a2**2)/3
+        q2 = (2*a2**3-9*a2*b2+27*c2)/27
+        discriminante = (q2/2)**2 + (p2/3)**3
+
         if discriminante == 0:
-            if p == 0 and q == 0:
-                raiz =-(a/3)
-               
-                message = f'P: {p}\t\t\t\tQ: {q}\t\t\t\tDiscriminante: {discriminante}'
-                messge2 = f'La ecuacion {polinomio} tiene 3 raices iguales\nRaiz Raiz 1: {raiz}\nRaiz 2: {raiz}\nRaiz 3: {raiz}'
-              
-                return message, message2, False
+            if p2 == 0 and q2 == 0:
+                raiz=-(a2/3)
+                print("La raiz es(triple):",raiz)
+                uf=raiz
             else:
-                raiz_1 = -((3*q)/(2*p)) - (a/3)
-                raiz_2 = -(4*(p**2))/(9*q) - (a/3)
-               
-                message = f'P: {p}\t\t\t\tQ: {q}\t\t\t\tDiscriminante: {discriminante}'
-                message2 = f'La ecuacion {polinomio} tiene 3 raices, 2 iguales  y 1 diferente\nRaiz 1: {raiz_1}\nRaiz 2: {raiz_1}\nRaiz 3: {raiz_2}'
-                
-                return message, message2, False
-                
-                
-        elif discriminante > 0:
-            raiz_real = real_root(cbrt(-(q/2) + sqrt(discriminante)) + cbrt(-(q/2) - sqrt(discriminante)) - (a/3)).evalf()
-            u = real_root( cbrt(-(q/2) + sqrt(discriminante))).evalf(n=14)
-            v = real_root(cbrt(-(q/2) - sqrt(discriminante))).evalf(n=14)
+                raiz_1 = -((3*q2)/(2*p2)) - (a2/3)
+                raiz_2 = -(4*(p2**2))/(9*q2) - (a2/3)
+                uf = raiz_1
+        elif discriminante > 0: 
+            raiz_real = real_root(cbrt(-(q2/2) + sqrt(discriminante)) + cbrt(-(q2/2) - sqrt(discriminante)) - (a2/3)).evalf()
+            u = real_root(cbrt(-(q2/2) + sqrt(discriminante))).evalf(n=14)
+            v = real_root(cbrt(-(q2/2) - sqrt(discriminante))).evalf(n=14)
             raiz_imaginaria = (-(u + v)/2) - (a/3) 
             raiz_2imaginaria = ((sqrt(3)/2) * (u - v) * I).evalf()
-                        
-            message = f'P: {p}\t\t\t\tQ: {q}\t\t\t\tDiscriminante: {discriminante}\t\t\t\tU: {u}\t\t\t\tV: {u}'
-            message2 =  f'La ecuación {polinomio} tiene 3 raices, 2 iguales imaginarias  y 1 real\nRaiz imaginarias 1: {raiz_imaginaria} +{raiz_2imaginaria}\nRaiz imaginarias 2: {raiz_imaginaria} -{raiz_2imaginaria}\nRaiz 3 real: {raiz_real}'
-            
-            return message, message2, False
-
-        elif discriminante < 0: 
+            uf =raiz_real
+        elif discriminante<0: 
+            k = 0
             arcocoseno = real_root(acos((-q/2)/(sqrt(-(p/3)**3)))).evalf()
-            raiz1 = real_root(2*sqrt(-p/3)*cos((arcocoseno+2*0*pi)/3)-(a/3)).evalf()
-            raiz2 = real_root(2*sqrt(-p/3)*cos((arcocoseno+2*1*pi)/3)-(a/3)).evalf()
-            raiz3 = real_root(2*sqrt(-p/3)*cos((arcocoseno+2*2*pi)/3)-(a/3)).evalf()
-       
-            
-            message = f'P: {p}\t\t\t\tQ: {q}\t\t\t\tDiscriminante: {discriminante}'
-            message2 = f'La ecuacion {polinomio} tiene 3 raices reales\nRaiz Raiz 1: {raiz1}\nRaiz 2: {raiz2}\nRaiz 3: {raiz3}'
-            return message, message2, False
-    else :
-        message = f"La ecuacion ingresada es de grado {len(coeficientes)-1} \npor lo tanto el metodo Tartaglia no puede dar una solucion."        
+            raiz1=real_root(2*sqrt(-p/3)*cos((arcocoseno+2*0*pi)/3)-(a/3))
+            uf = raiz1
+     
+        v2 = sqrt((2*uf)-p) 
+        w = -(q/(2*v2)) 
+        x_1 = ((v2 + sqrt((v2**2) - 4*(uf - w)))/2) - a/4
+        x_2 = ((v2 - sqrt((v2**2) - 4*(uf - w)))/2) - a/4
+        x_3 = ((-v2 + sqrt((v2**2) - 4*(uf + w)))/2) -a/4
+        x_4 = ((-v2 - sqrt((v2**2) - 4*(uf + w)))/2)-a/4
         
+        message = f'P: {p}\t\t\t\t Q: {q}\t\t\t\t R: {r}\t\t\t\t V: {v2}\t\t\t\t W: {w}\t\t\t\t U: {uf}'
+        message2 = f'Raices encontradas:\nRaiz 1: {x_1}\nRaiz 2: {x_2}\nRaiz 3: {x_3}\nRaiz 4: {x_4}'
+        return message, message2, False
+    else :
+        message = f"La ecuacion ingresada es de grado {len(coeficientes)-1} \npor lo tanto el metodo Ferrari no puede dar una solucion."     
+
         return message, None, True
         
 def show(): # Muestra los resultados 
