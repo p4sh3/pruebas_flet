@@ -13,6 +13,7 @@ import methods.unidad2.biseccion
 import methods.unidad2.grafico
 import methods.unidad2.falsa_posicion
 import methods.unidad2.punto_fijo
+import methods.unidad2.secante
 
 # def import_modules(packages):
 
@@ -167,6 +168,12 @@ def main(page: ft.Page):
                             style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
                             on_click=method_click,
                             data = ("unidad2", "punto_fijo")
+                        ),
+                        ft.MenuItemButton(
+                            content=ft.Text("Secante"),
+                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
+                            on_click=method_click,
+                            data = ("unidad2", "secante")
                         )
                     ]
                 ),
