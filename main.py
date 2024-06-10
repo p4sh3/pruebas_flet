@@ -19,6 +19,7 @@ import methods.unidad2.newton_raphson_mod
 import methods.unidad2.tartaglia
 import methods.unidad2.cuadratica
 import methods.unidad2.ferrari
+import methods.unidad3.muller
 
 # def import_modules(packages):
 
@@ -228,6 +229,7 @@ def main(page: ft.Page):
                             content=ft.Text("Muller"),
                             style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.GREEN}),
                             on_click=method_click,
+                            data = ("unidad3", "muller")
                         ),
                         ft.MenuItemButton(
                             content=ft.Text("Ferrari"),
