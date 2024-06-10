@@ -38,9 +38,9 @@ def solve(polinomio): # codigo del algoritmo
         i=0
         a, b, c = coeficientes[:]    
        
-        raiz1= (-(b) + (sqrt((b**2) - 4*(a*c))) ) / (2*a).evalf()
+        raiz1= ((-(b) + (sqrt((b**2) - 4*(a*c))) ) / (2*a)).evalf()
         # raiz2=((-(b) - sqrt(((b)**2)-4*a*c))/2*a).evalf()
-        raiz2 = (-(b) - (sqrt((b**2) - 4*(a*c))) ) / (2*a).evalf()
+        raiz2 = ((-(b) - (sqrt((b**2) - 4*(a*c))) ) / (2*a)).evalf()
         message = f'a: {a}\t\t\t\tb: {b}\t\t\t\tc: {c}'
         message2 = f'La ecuacion {polinomio} tiene dos raices\nRaiz 1: {raiz1}\nRaiz 2: {raiz2}'
         
