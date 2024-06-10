@@ -41,38 +41,66 @@ def solve(fx, punto0, punto1, punto2, cifras): # codigo del algoritmo
         fx0 = fx.subs(x, X0)
         fx1 = fx.subs(x, X1)
         fx2 = fx.subs(x, X2)
-
-        h0 = X1 - X0
-        h1 = X2 - X1
-
-        #et0 = &0, et1 = &1
-        et0 = (fx1 - fx0)/h0
-        et1 = (fx2- fx1)/h1
-
-        a = (et1 - et0)/(h1 + h0)
-        b = (a * h1) + et1
-        c = fx2
-        
-        D = math.sqrt((b ** 2) - (4 * a * c))
-
-        if abs(b + D) > abs(b - D):
-            Xr = X2 + ((-2*c)/((b**2) + D))
+        if  fx0.is_real==False:
+             print(f"La función {fx} en el punto X0={X0} se esta evaluando fuera de su dominio") 
+             return rows, Xr, Ea, iteracion #necesita tirar el mensaje
+        elif  fx1.is_real==False:
+             print(f"La función {fx} en el punto X1={X1} se esta evaluando fuera de su dominio") 
+             return rows, Xr, Ea, iteracion #necesita tirar el mensaje       
+        elif  fx2.is_real==False:
+            print(f"La función {fx} en el punto X2={X2} se esta evaluando fuera de su dominio")
+            return rows, Xr, Ea, iteracion #necesita tirar el mensaje
         else:
-            Xr = X2 + ((-2* c)/((b**2) - D))
+            h0 = X1 - X0
+            h1 = X2 - X1
 
-        Ea = abs(((Xr - X2)/Xr)*100)
-        
-        rows.append(ft.DataRow(
-                cells=[ft.DataCell(ft.Text(str(cell))) for cell in [iteracion, X0, X1, X2, Xr, Ea]],
-        ))
-        
-        if(Ea < Es):
-            break
-        else:
-            X0 = X1
-            X1 = X2
-            X2 = Xr
+            #et0 = &0, et1 = &1
+            et0 = (fx1 - fx0)/h0
+            if et0.is_real==False:
+                print(f"Se genero division entre cero al calcular el &0, en la iteracion {iteracion}")
+                return #falta
+            et1 = (fx2- fx1)/h1
+            if et1.is_real==False:
+                print(f"Se genero division entre cero al calcular el &1, en la iteracion {iteracion}")
+                return #falta
             
+            a = (et1 - et0)/(h1 + h0)
+            b = (a * h1) + et1
+            c = fx2
+            
+            D = sqrt((b ** 2) - (4 * a * c))
+            if Ea.is_real==False:
+                print(f"Se genero numeros imaginarios al calcular el D, en la iteracion {iteracion}")
+                return #falta
+
+            if abs(b + D) > abs(b - D):
+                Xr = X2 + ((-2*c)/((b) + D))
+                if Xr.is_real==False:
+                    print(f"Se genero una indeterminacion o numero imaginarios\nAl calcular el xr")
+                    return #falta
+                
+            else:
+                Xr = X2 + ((-2* c)/((b) - D))
+                if Xr.is_real==False:
+                    print(f"Se genero una indeterminacion o numero imaginarios\nAl calcular el xr")
+                    return #falta
+
+            Ea = abs(((Xr - X2)/Xr)*100)
+            if Ea.is_real==False:
+                print(f"Se genero division entre cero al calcular el Ea, en la iteracion {iteracion}")
+                return #falta
+            
+            rows.append(ft.DataRow(
+                    cells=[ft.DataCell(ft.Text(str(cell))) for cell in [iteracion, X0, X1, X2, Xr, Ea]],
+            ))
+            
+            if(Ea < Es):
+                break
+            else:
+                X0 = X1
+                X1 = X2
+                X2 = Xr
+                
         iteracion += 1
    
         
