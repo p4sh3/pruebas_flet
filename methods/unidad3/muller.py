@@ -74,13 +74,13 @@ def solve(fx, punto0, punto1, punto2, cifras): # codigo del algoritmo
                 return #falta
 
             if abs(b + D) > abs(b - D):
-                Xr = X2 + ((-2*c)/((b) + D))
+                Xr = N(X2 + ((-2*c)/((b) + D)),13)
                 if Xr.is_real==False:
                     print(f"Se genero una indeterminacion o numero imaginarios\nAl calcular el xr")
                     return #falta
                 
             else:
-                Xr = X2 + ((-2* c)/((b) - D))
+                Xr = N(X2 + ((-2*c)/((b) - D)),13)
                 if Xr.is_real==False:
                     print(f"Se genero una indeterminacion o numero imaginarios\nAl calcular el xr")
                     return #falta
