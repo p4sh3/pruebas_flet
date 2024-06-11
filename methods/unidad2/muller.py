@@ -42,14 +42,18 @@ def solve(fx, punto0, punto1, punto2, cifras): # codigo del algoritmo
         fx1 = fx.subs(x, X1)
         fx2 = fx.subs(x, X2)
         if  fx0.is_real==False:
-             print(f"La función {fx} en el punto X0={X0} se esta evaluando fuera de su dominio") 
-             return rows, Xr, Ea, iteracion #necesita tirar el mensaje
+            alert = True
+            message = f"La función {fx} en el punto X0={X0} se esta evaluando fuera de su dominio"
+            return rows, None, None, iteracion, alert, message #necesita tirar el mensaje
         elif  fx1.is_real==False:
-             print(f"La función {fx} en el punto X1={X1} se esta evaluando fuera de su dominio") 
-             return rows, Xr, Ea, iteracion #necesita tirar el mensaje       
+            alert = True
+            amessage = "La función {fx} en el punto X1={X1} se esta evaluando fuera de su dominio"
+            return rows, None, None, iteracion, alert, message #necesita tirar el mensaje     
+           
         elif  fx2.is_real==False:
-            print(f"La función {fx} en el punto X2={X2} se esta evaluando fuera de su dominio")
-            return rows, Xr, Ea, iteracion #necesita tirar el mensaje
+            alert = True
+            message = f"La función {fx} en el punto X2={X2} se esta evaluando fuera de su dominio"
+            return rows, None, None, iteracion, alert, message #necesita tirar el mensaje
         else:
             h0 = X1 - X0
             h1 = X2 - X1
@@ -57,38 +61,45 @@ def solve(fx, punto0, punto1, punto2, cifras): # codigo del algoritmo
             #et0 = &0, et1 = &1
             et0 = (fx1 - fx0)/h0
             if et0.is_real==False:
-                print(f"Se genero division entre cero al calcular el &0, en la iteracion {iteracion}")
-                return #falta
+                alert = True
+                message = f"Se genero division entre cero al calcular el &0, en la iteracion {iteracion}"
+                return rows, None, None, iteracion, alert, message
+            
             et1 = (fx2- fx1)/h1
             if et1.is_real==False:
-                print(f"Se genero division entre cero al calcular el &1, en la iteracion {iteracion}")
-                return #falta
+                alert = True
+                message = f"Se genero division entre cero al calcular el &1, en la iteracion {iteracion}"
+                return rows, None, None, iteracion, alert, message
             
             a = (et1 - et0)/(h1 + h0)
             b = (a * h1) + et1
             c = fx2
             
             D = sqrt((b ** 2) - (4 * a * c))
-            if Ea.is_real==False:
-                print(f"Se genero numeros imaginarios al calcular el D, en la iteracion {iteracion}")
-                return #falta
+            if D.is_real==False:
+                alert = True
+                message = f"Se genero numeros imaginarios al calcular el D, en la iteracion {iteracion}"
+                return rows, None, None, iteracion, alert, message
 
             if abs(b + D) > abs(b - D):
                 Xr = N(X2 + ((-2*c)/((b) + D)),13)
                 if Xr.is_real==False:
-                    print(f"Se genero una indeterminacion o numero imaginarios\nAl calcular el xr")
-                    return #falta
+                    alert = True
+                    message = f"Se genero una indeterminacion o numero imaginarios\nAl calcular el xr"
+                    return rows, None, None, iteracion, alert, message
                 
             else:
                 Xr = N(X2 + ((-2*c)/((b) - D)),13)
                 if Xr.is_real==False:
-                    print(f"Se genero una indeterminacion o numero imaginarios\nAl calcular el xr")
-                    return #falta
+                    alert = True
+                    message = f"Se genero una indeterminacion o numero imaginarios\nAl calcular el xr"
+                    return rows, None, None, iteracion, alert, message
 
             Ea = abs(((Xr - X2)/Xr)*100)
             if Ea.is_real==False:
-                print(f"Se genero division entre cero al calcular el Ea, en la iteracion {iteracion}")
-                return #falta
+                alert = True
+                message = f"Se genero division entre cero al calcular el Ea, en la iteracion {iteracion}"
+                return rows, None, None, iteracion, alert, message
             
             rows.append(ft.DataRow(
                     cells=[ft.DataCell(ft.Text(str(cell))) for cell in [iteracion, X0, X1, X2, Xr, Ea]],
@@ -104,7 +115,7 @@ def solve(fx, punto0, punto1, punto2, cifras): # codigo del algoritmo
         iteracion += 1
    
         
-    return rows, Xr, Ea, iteracion
+    return rows, Xr, Ea, iteracion, False, None
 
 
           
@@ -141,50 +152,23 @@ def show(): # Muestra los resultados
             
             if cifras > 0:
                 try:
-                    rows, Xr, Ea, iteracion = solve(fx, punto0, punto1, punto2, cifras)
-                    table.rows = rows
-                    table.visible = True
-                                
-                    #Mostrar resultados
-                    lbl_root.content = ft.Text(value=f'Solucion: {Xr}', weight="bold", size=20, text_align=ft.TextAlign.CENTER)
-                    lbl_root.bgcolor = ft.colors.GREEN
-                    lbl_root.padding = 10
-                    lbl_root.border_radius = 10
-                    lbl_results.value = f'Metodo: {name}\nf(x) {fx}\nCon {iteracion} iteraciones\nError porcentual aproximado {Ea}%'
-                    container_results.visible=True
-                    event.control.page.update()
-                # if alert == True:
-                #     show_alert(event, messege)
-                #     table.rows = rows
-                #     table.visible = True
-                            
-                #     #Mostrar resultados
-                #     lbl_root.content = ft.Text(value=f'Solucion: {xi1}', weight="bold", size=20, text_align=ft.TextAlign.CENTER)
-                #     lbl_root.bgcolor = ft.colors.GREEN
-                #     lbl_root.padding = 10
-                #     lbl_root.border_radius = 10
-                #     lbl_results.value = f'Metodo: {metodo}\nf(x) {fx}\nCon {iteracion} iteraciones\nError porcentual aproximado {Ea}%'
-                #     container_results.visible=True
-                #     event.control.page.update()
-                # else:                
-                #     try:
-                #         # division_cero, mensaje =solve(gx, x0, cifras)
-
-                #             #if division_cero==True:
-                #             # show_alert(event, mensaje)
-                #         # else:    
-                #         rows, xi1, fx, Ea, metodo, iteracion, alert, messege = solve(fx, limite_inferior, limite_superior, cifras)
-                #         table.rows = rows
-                #         table.visible = True
-                            
-                #             #Mostrar resultados
-                #         lbl_root.content = ft.Text(value=f'Solucion: {xi1}', weight="bold", size=20, text_align=ft.TextAlign.CENTER)
-                #         lbl_root.bgcolor = ft.colors.GREEN
-                #         lbl_root.padding = 10
-                #         lbl_root.border_radius = 10
-                #         lbl_results.value = f'Metodo: {metodo}\nf(x) {fx}\nCon {iteracion} iteraciones\nError porcentual aproximado {Ea}%'
-                #         container_results.visible=True
-                #         event.control.page.update()
+                    rows, Xr, Ea, iteracion, alert, message = solve(fx, punto0, punto1, punto2, cifras)
+                
+                    if alert == True:
+                        show_alert(event, message)
+                    else:                
+                        rows, Xr, Ea, iteracion, alert, message = solve(fx, punto0, punto1, punto2, cifras)
+                        table.rows = rows
+                        table.visible = True
+                                    
+                        #Mostrar resultados
+                        lbl_root.content = ft.Text(value=f'Solucion: {Xr}', weight="bold", size=20, text_align=ft.TextAlign.CENTER)
+                        lbl_root.bgcolor = ft.colors.GREEN
+                        lbl_root.padding = 10
+                        lbl_root.border_radius = 10
+                        lbl_results.value = f'Metodo: {name}\nf(x) {fx}\nCon {iteracion} iteraciones\nError porcentual aproximado {Ea}%'
+                        container_results.visible=True
+                        event.control.page.update()
                             
                 except ValueError as e:
                     print(f"Error: {e}")

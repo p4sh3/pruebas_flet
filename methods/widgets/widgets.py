@@ -40,4 +40,26 @@ def open_dlg_modal(e):
     e.control.page.dialog = dlg_modal
     dlg_modal.open = True
     e.control.page.update()
+    
+def close_modal_alert(event):
+    modal_alert.open = False
+    event.control.page.update()        
         
+modal_alert = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("Expresiones permitidas"),
+        content=ft.Text(),
+        actions=[
+            ft.TextButton("Ok", on_click=close_modal_alert),
+        ],
+        actions_alignment=ft.MainAxisAlignment.END,
+         on_dismiss=lambda e: print("Modal dialog dismissed!"),
+)
+                
+def show_modal_alert(event, message):
+    event.control.page.dialog = modal_alert
+    text_control = modal_alert.content
+    text_control.value = message
+    modal_alert.open = True
+    event.control.page.update()
+    

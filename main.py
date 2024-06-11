@@ -19,7 +19,8 @@ import methods.unidad2.newton_raphson_mod
 import methods.unidad2.tartaglia
 import methods.unidad2.cuadratica
 import methods.unidad2.ferrari
-import methods.unidad3.muller
+import methods.unidad2.muller
+import methods.unidad3.interpolacion_lineal
 
 # def import_modules(packages):
 
@@ -212,7 +213,13 @@ def main(page: ft.Page):
                             style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
                             on_click=method_click,
                             data = ("unidad2", "ferrari")
-                        )
+                        ),
+                        ft.MenuItemButton(
+                            content=ft.Text("Muller"),
+                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.GREEN}),
+                            on_click=method_click,
+                            data = ("unidad2", "muller")
+                        ),
                     ]
                 ),
                 
@@ -221,16 +228,12 @@ def main(page: ft.Page):
                     controls=[
 
                         ft.MenuItemButton(
-                            content=ft.Text("Horner"),
+                            content=ft.Text("Interpolacion Lineal"),
                             style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.BLUE}),
                             on_click=method_click,
+                             data = ("unidad3", "interpolacion_lineal")
                         ),
-                        ft.MenuItemButton(
-                            content=ft.Text("Muller"),
-                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.GREEN}),
-                            on_click=method_click,
-                            data = ("unidad3", "muller")
-                        ),
+                        
                         ft.MenuItemButton(
                             content=ft.Text("Ferrari"),
                             style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
