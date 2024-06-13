@@ -21,6 +21,9 @@ import methods.unidad2.cuadratica
 import methods.unidad2.ferrari
 import methods.unidad2.muller
 import methods.unidad3.interpolacion_lineal
+import methods.unidad2.horner
+import methods.unidad3.interpolacion_cuadratica
+import methods.unidad3.lagrange
 
 # def import_modules(packages):
 
@@ -220,6 +223,12 @@ def main(page: ft.Page):
                             on_click=method_click,
                             data = ("unidad2", "muller")
                         ),
+                        ft.MenuItemButton(
+                            content=ft.Text("Horner"),
+                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.GREEN}),
+                            on_click=method_click,
+                            data = ("unidad2", "horner")
+                        ),
                     ]
                 ),
                 
@@ -231,13 +240,20 @@ def main(page: ft.Page):
                             content=ft.Text("Interpolacion Lineal"),
                             style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.BLUE}),
                             on_click=method_click,
-                             data = ("unidad3", "interpolacion_lineal")
+                            data = ("unidad3", "interpolacion_lineal")
                         ),
                         
                         ft.MenuItemButton(
-                            content=ft.Text("Ferrari"),
+                            content=ft.Text("Interpolación Cuadratica"),
                             style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
                             on_click=method_click,
+                            data = ("unidad3", "interpolacion_cuadratica"),
+                        ),
+                        ft.MenuItemButton(
+                            content=ft.Text("Lagrange"),
+                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
+                            on_click=method_click,
+                            data = ("unidad3", "lagrange"),
                         )
                     ]
                 ),

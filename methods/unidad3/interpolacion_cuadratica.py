@@ -4,7 +4,7 @@ from sympy import *
 from sympy.core.numbers import *
 # from methods.unidad1.grafico import show as show_grafico
 from methods.widgets.widgets import show_alert, open_dlg_modal, show_modal_alert
-name = "Interpolación Lineal"
+name = "Interpolación Cuadratica"
 
 
 def validar_expresion(expr):
@@ -30,37 +30,58 @@ def solve(fx, valores_x, valores_y): # codigo del algoritmo
     x_valores = valores_x
     f = valores_y
     
-    if len(x_valores) >= 2 and len(f) >= 2 :
-        y = f[0]+((f[1] - f[0])/(x_valores[1] - x_valores[0]))*(x-x_valores[0])
-        message = "polinomio interpolacion lineal:"
-        return y, message, False
-    
-    elif f_x != "" and len(x_valores) >= 2:
+    if len(x_valores)>=3 and len(f)>=3 :
+        b0 = f[0]
+        b1 = (f[1] - b0)/(x_valores[1] - x_valores[0])
+        b2=(((f[2] - f[1])/(x_valores[2] - x_valores[1])) - (b1))/(x_valores[2] - x_valores[0])
+        print(b0)
+        print(b1)
+        print(b2)
+        f2x = b0 + b1 * (x - x_valores[0]) + b2*(x - x_valores[0])*(x - x_valores[1]) 
+        poli = sp.expand(f2x)
+        message = f'B0 = {b0} \t\t\t\tB1 = {b1} \t\t\t\tB2 = {b2}'
+        
+        return poli, message, False
+        
+    elif f_x != "" and len(x_valores) >= 3:
         i = 0
         while i < len(x_valores):
             evaluar = f_x.subs({x:x_valores[i]}).evalf()
+            
             if evaluar.is_real == False:
                 message = f"Al evaluar la funcion {f_x} se evaluo un punto fuera de su dominio\n"
+                
                 return None, message, True
             
             f.append(f_x.subs({x:x_valores[i]}).evalf())  
-            i = i+1
-        y = f[0] + ((f[1]-f[0])/(x_valores[1] - x_valores[0]))*(x-x_valores[0])
-        message = "polinomio interpolacion lineal:"
-        return y, message, False
-    else:
-        if  len(x_valores) >= 2 and f_x == "" and len(f) == 0:
-            message = f"No hay funcion para crear la tabla f(x)"
-            return None, message, True
+            i = i + 1 
+            
+        b0 = f[0]
+        b1 = (f[1]-b0)/(x_valores[1]-x_valores[0])
+        b2 = (((f[2] - f[1])/(x_valores[2] - x_valores[1])) - (b1))/(x_valores[2] - x_valores[0])
 
-        elif (len(x_valores) < 2 or len(f) < 2) and f_x == "":
-            message = f"La tabla de valores x o f(x) no cuenta con los valores necesarios"
-            return None, message, True
+        f2x = b0 + b1*(x - x_valores[0]) + b2*(x - x_valores[0])*(x - x_valores[1])
+        poli = sp.expand(f2x)
+        message = f'B0 = {b0} \t\t\t\tB1 = {b1} \t\t\t\tB2 = {b2}'
         
+        return poli, message, False
+    
+    else:
+        if  len(x_valores) >= 3 and f_x == "" and len(f) == 0:
+            message = f"No hay funcion para crear la tabla f(x)"
+            
+            return None, message, True
+            
+        elif (len(x_valores) < 3 or len(f) < 3) and f_x == "":
+            message = f"La tabla de valores x o f(x) no cuenta con los valores necesarios"
+            
+            return None, message, True
+            
         elif f_x != "" and len(x_valores) == 0:
             message = f"La tabla de valores x no cuenta con datos"
-            return None, message, True     
-        
+            
+            return None, message, True
+
 def show(): # Muestra los resultados 
     def clean(event):
         container_results.visible = False
@@ -96,7 +117,7 @@ def show(): # Muestra los resultados
                         #Mostrar resultados
                         lbl_results.content = ft.Text(value=f'{message}', size=16, text_align=ft.TextAlign.CENTER)
                         lbl_results2.content = ft.Text(value=f'{polinomio}', weight="bold", size=20, text_align=ft.TextAlign.CENTER)
-                        lbl_results2.bgcolor = ft.colors.GREEN
+                        lbl_results2.bgcolor = ft.colors.BLUE
                         lbl_results2.padding = 10
                         lbl_results2.border_radius = 10
                         container_results.visible=True
@@ -131,8 +152,8 @@ def show(): # Muestra los resultados
                     else: 
                         #Mostrar resultados
                         lbl_results.content = ft.Text(value=f'{message}', size=16, text_align=ft.TextAlign.CENTER)
-                        lbl_results2.content = ft.Text(value=f'{polinomio}', weight="bold", size=20, text_align=ft.TextAlign.CENTER)
-                        lbl_results2.bgcolor = ft.colors.GREEN
+                        lbl_results2.content = ft.Text(value=f'polinomio interpolacion cuadratico:\n {polinomio}', weight="bold", size=20, text_align=ft.TextAlign.CENTER)
+                        lbl_results2.bgcolor = ft.colors.BLUE
                         lbl_results2.padding = 10
                         lbl_results2.border_radius = 10
                         container_results.visible=True
@@ -252,11 +273,11 @@ def show(): # Muestra los resultados
                         [
                         ft.Container(
                             lbl_results,
-                            col={"sm": 12, "md": 5, "xl": 12},
+                            col={"sm": 12, "md": 12, "xl": 12},
                         ),
                         ft.Container(
                             lbl_results2,
-                            col={"sm": 6, "md": 4, "xl": 3},
+                            col={"sm": 6, "md": 8, "xl": 4},
                         )
                     ],
                         alignment=ft.MainAxisAlignment.CENTER,
