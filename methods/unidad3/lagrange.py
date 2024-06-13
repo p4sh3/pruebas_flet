@@ -31,6 +31,13 @@ def solve(fx, valores_x, valores_y, grade): # codigo del algoritmo
     yv = valores_y
     grado = grade
     
+    def valores_repetidos(lista):
+        return len(lista) != len(set(lista))
+    
+    if valores_repetidos(xv):
+            message = "En la tabla de valores de X se encuentran valores repetidos"   
+            return None, None, message, True
+    
     if grado < 1 or grado >= len(xv):
     #aqui se detendria si pide un grado menor a 1 o un grado mayor/igual al numero de puntos que hay en tablas
         message = f"No es pisible calcular la interpolacion de Lagrange de grado {grado}"
@@ -40,6 +47,11 @@ def solve(fx, valores_x, valores_y, grade): # codigo del algoritmo
     #return polinomio, grado, message, alert
     y = 0
     if (len(xv) >= 2 and len(yv) >= 2) and f_x == "" :
+        
+        if valores_repetidos(yv):
+            message = "En la tabla de valores de Y se encuentran valores repetidos"   
+            return None, None, message, True
+        
         y = 0
         i = 0
         while i < grado+1 :

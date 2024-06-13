@@ -30,13 +30,20 @@ def solve(fx, valores_x, valores_y): # codigo del algoritmo
     x_valores = valores_x
     f = valores_y
     
+    def valores_repetidos(lista):
+        return len(lista) != len(set(lista))
+    if valores_repetidos(x_valores):
+            message = "En la tabla se encuentran valores repetidos"   
+            return None, message, True
+        
     if len(x_valores)>=3 and len(f)>=3 :
+        if valores_repetidos(f):
+            message = "En la tabla de valores de Y se encuentran valores repetidos"   
+            return None, message, True
+        
         b0 = f[0]
         b1 = (f[1] - b0)/(x_valores[1] - x_valores[0])
         b2=(((f[2] - f[1])/(x_valores[2] - x_valores[1])) - (b1))/(x_valores[2] - x_valores[0])
-        print(b0)
-        print(b1)
-        print(b2)
         f2x = b0 + b1 * (x - x_valores[0]) + b2*(x - x_valores[0])*(x - x_valores[1]) 
         poli = sp.expand(f2x)
         message = f'B0 = {b0} \t\t\t\tB1 = {b1} \t\t\t\tB2 = {b2}'
@@ -55,11 +62,19 @@ def solve(fx, valores_x, valores_y): # codigo del algoritmo
             
             f.append(f_x.subs({x:x_valores[i]}).evalf())  
             i = i + 1 
-            
+         
+        # if (x_valores[1] - x_valores[0]) == 0:
+        #     message = "En la tabla se encuentran valores repetidos"   
+        #     return None, message, True
+           
         b0 = f[0]
-        b1 = (f[1]-b0)/(x_valores[1]-x_valores[0])
+        b1 = N((f[1]-b0)/(x_valores[1]-x_valores[0])).evalf()
         b2 = (((f[2] - f[1])/(x_valores[2] - x_valores[1])) - (b1))/(x_valores[2] - x_valores[0])
-
+        print(type(b0))
+        print(type(b1))
+        print(type(b2))
+        
+        
         f2x = b0 + b1*(x - x_valores[0]) + b2*(x - x_valores[0])*(x - x_valores[1])
         poli = sp.expand(f2x)
         message = f'B0 = {b0} \t\t\t\tB1 = {b1} \t\t\t\tB2 = {b2}'
@@ -72,13 +87,13 @@ def solve(fx, valores_x, valores_y): # codigo del algoritmo
             
             return None, message, True
             
-        elif (len(x_valores) < 3 or len(f) < 3) and f_x == "":
+        elif (len(x_valores) < 3 or len(f) < 3) and f_x == "" :
             message = f"La tabla de valores x o f(x) no cuenta con los valores necesarios"
             
             return None, message, True
             
-        elif f_x != "" and len(x_valores) == 0:
-            message = f"La tabla de valores x no cuenta con datos"
+        elif f_x != "" and len(x_valores) < 3:
+            message = f"La tabla de valores x no cuenta con datos necesarios"
             
             return None, message, True
 

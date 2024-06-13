@@ -177,8 +177,8 @@ def show(): # Muestra los resultados
         on_change = update_inputs,
         height=60,
         options=[
-            ft.dropdown.Option(text='Funcion y valores en x', key=1),
-            ft.dropdown.Option(text='Tabla de valores x, y', key=2),
+            ft.dropdown.Option(text='Funcion y valores en x', key=1, on_click=clean),
+            ft.dropdown.Option(text='Tabla de valores x, y', key=2, on_click=clean),
         ]
     )
     
