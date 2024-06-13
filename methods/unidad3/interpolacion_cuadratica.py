@@ -32,6 +32,7 @@ def solve(fx, valores_x, valores_y): # codigo del algoritmo
     
     def valores_repetidos(lista):
         return len(lista) != len(set(lista))
+    
     if valores_repetidos(x_valores):
             message = "En la tabla se encuentran valores repetidos"   
             return None, message, True
