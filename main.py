@@ -24,6 +24,7 @@ import methods.unidad3.interpolacion_lineal
 import methods.unidad2.horner
 import methods.unidad3.interpolacion_cuadratica
 import methods.unidad3.lagrange
+import methods.unidad3.newton_recursivo
 
 # def import_modules(packages):
 
@@ -254,6 +255,12 @@ def main(page: ft.Page):
                             style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
                             on_click=method_click,
                             data = ("unidad3", "lagrange"),
+                        ),
+                        ft.MenuItemButton(
+                            content=ft.Text("Newton Recursivo"),
+                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
+                            on_click=method_click,
+                            data = ("unidad3", "newton_recursivo"),
                         )
                     ]
                 ),
