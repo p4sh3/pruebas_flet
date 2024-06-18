@@ -26,7 +26,7 @@ import methods.unidad3.interpolacion_cuadratica
 import methods.unidad3.lagrange
 import methods.unidad3.newton_recursivo
 import methods.unidad3.diferencias_divididas
-
+import methods.unidad3.spline
 # def import_modules(packages):
 
 #     try:
@@ -52,8 +52,8 @@ import methods.unidad3.diferencias_divididas
 #         return None
 
 
-for module in sys.modules:
-        print(module)
+# for module in sys.modules:
+#         print(module)
 
 
 def select_modulo(module_name):
@@ -268,6 +268,12 @@ def main(page: ft.Page):
                             style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
                             on_click=method_click,
                             data = ("unidad3", "diferencias_divididas"),
+                        ),
+                        ft.MenuItemButton(
+                            content=ft.Text("Trazadores cubicos"),
+                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
+                            on_click=method_click,
+                            data = ("unidad3", "spline"),
                         )
                     ]
                 ),

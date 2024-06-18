@@ -94,7 +94,7 @@ def solve(fx, valores_x, valores_y, valor_eval): # codigo del algoritmo
             columns=[
                 ft.DataColumn(ft.Text("X")),
                 ft.DataColumn(ft.Text("F(X)")),
-            ] + [ft.DataColumn(ft.Text(f'Diff{i}')) for i in range(1, len(escalera) - 1)],
+            ] + [ft.DataColumn(ft.Text(f'Nivel {i}')) for i in range(1, len(escalera) - 1)],
             rows=[
                 ft.DataRow(cells=[ft.DataCell(ft.Text(str(cell))) for cell in fila])
                 for fila in zip(*escalera)
@@ -205,21 +205,21 @@ def solve(fx, valores_x, valores_y, valor_eval): # codigo del algoritmo
             o += 1
         poli = sp.expand(polinomio)   
         
-        vv = f_x.subs(x, x_evaluar) 
+        vv = (f_x.subs(x, x_evaluar)).evalf()
         
         if not vv.is_real:
             message = "Error, la funcion se evaluo fuera de su dominio\nAl calcular el valor verdadero"
             
             return None, None, None, message, True
       
-        va = polinomio.subs(x, x_evaluar)
+        va = (polinomio.subs(x, x_evaluar)).evalf()
         
         if not va.is_real:
             message ="Error, la funcion se evaluo fuera de su dominio\nAl calcular el valor aproximado"
             
             return None, None, None, message, True
         
-        ep = abs((vv - va) / vv) * 100
+        ep = (abs((vv - va) / vv) * 100).evalf()
         
         if not ep.is_real:
             message = "Error, division entre 0 \nAl calcular el error porcentual"
@@ -279,7 +279,6 @@ def show(): # Muestra los resultados
         #Limpia los datos del valor a evaluar en el polinomio
         lbl_results3.controls[0].value = row.controls[5].value
         lbl_eval.visible = False
-        
         
         def evaluar(event):
             x = sp.symbols('x')
