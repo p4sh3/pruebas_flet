@@ -27,6 +27,8 @@ import methods.unidad3.lagrange
 import methods.unidad3.newton_recursivo
 import methods.unidad3.diferencias_divididas
 import methods.unidad3.spline
+
+import methods.unidad5.rugen_kutta
 # def import_modules(packages):
 
 #     try:
@@ -275,6 +277,20 @@ def main(page: ft.Page):
                             on_click=method_click,
                             data = ("unidad3", "spline"),
                         )
+                    ]
+                ),
+                
+                ft.SubmenuButton(
+                    content=ft.Text("Unidad 5"),
+                    controls=[
+
+                        ft.MenuItemButton(
+                            content=ft.Text("Rugen Kuta"),
+                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.BLUE}),
+                            on_click=method_click,
+                            data = ("unidad5", "rugen_kutta")
+                        ),
+                        
                     ]
                 ),
                 
