@@ -277,7 +277,7 @@ def show(): # Muestra los resultados
         x = sp.symbols('x')
         
         #Limpia los datos del valor a evaluar en el polinomio
-        lbl_results3.controls[0].value = row.controls[5].value
+        lbl_results3.controls[0].value = ''
         lbl_eval.visible = False
         
         def evaluar(event):

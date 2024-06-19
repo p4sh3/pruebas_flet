@@ -20,6 +20,8 @@ import methods.unidad2.tartaglia
 import methods.unidad2.cuadratica
 import methods.unidad2.ferrari
 import methods.unidad2.muller
+import methods.unidad2.bairstown
+import methods.unidad3.hermite
 import methods.unidad3.interpolacion_lineal
 import methods.unidad2.horner
 import methods.unidad3.interpolacion_cuadratica
@@ -27,6 +29,8 @@ import methods.unidad3.lagrange
 import methods.unidad3.newton_recursivo
 import methods.unidad3.diferencias_divididas
 import methods.unidad3.spline
+import methods.unidad4.diferencia_numerica
+import methods.unidad4.integracion_numerica
 
 import methods.unidad5.rugen_kutta
 # def import_modules(packages):
@@ -233,6 +237,13 @@ def main(page: ft.Page):
                             on_click=method_click,
                             data = ("unidad2", "horner")
                         ),
+                        ft.MenuItemButton(
+                            content=ft.Text("Bairstown"),
+                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.GREEN}),
+                            on_click=method_click,
+                            data = ("unidad2", "bairstown")
+                        ),
+                        
                     ]
                 ),
                 
@@ -276,7 +287,34 @@ def main(page: ft.Page):
                             style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.RED}),
                             on_click=method_click,
                             data = ("unidad3", "spline"),
-                        )
+                        ),
+                        ft.MenuItemButton(
+                            content=ft.Text("Hermite"),
+                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.GREEN}),
+                            on_click=method_click,
+                            data = ("unidad3", "hermite")
+                        ),
+                    ]
+                ),
+                
+                ft.SubmenuButton(
+                    content=ft.Text("Unidad 4"),
+                    controls=[
+
+                        ft.MenuItemButton(
+                            content=ft.Text("Diferencia Numerica"),
+                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.BLUE}),
+                            on_click=method_click,
+                            data = ("unidad4", "diferencia_numerica")
+                        ),
+                        
+                        ft.MenuItemButton(
+                            content=ft.Text("Integracion Numerica"),
+                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.BLUE}),
+                            on_click=method_click,
+                            data = ("unidad4", "integracion_numerica")
+                        ),
+                        
                     ]
                 ),
                 
@@ -293,6 +331,7 @@ def main(page: ft.Page):
                         
                     ]
                 ),
+                
                 
             ]
         )
