@@ -464,7 +464,7 @@ def show(): # Muestra los resultados
     
     # Controles para que el usuario interactue
     select_options = ft.Dropdown(
-        label='Opciones para derivar',
+        label='Opciones para integrar',
         on_change=update_inputs,
         height=60,
         options=[

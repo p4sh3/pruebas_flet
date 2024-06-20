@@ -31,7 +31,8 @@ import methods.unidad3.diferencias_divididas
 import methods.unidad3.spline
 import methods.unidad4.diferencia_numerica
 import methods.unidad4.integracion_numerica
-
+import methods.unidad5.multipaso
+import methods.unidad5.euler
 import methods.unidad5.rugen_kutta
 # def import_modules(packages):
 
@@ -329,6 +330,18 @@ def main(page: ft.Page):
                             data = ("unidad5", "rugen_kutta")
                         ),
                         
+                        ft.MenuItemButton(
+                            content=ft.Text("Multipasos"),
+                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.BLUE}),
+                            on_click=method_click,
+                            data = ("unidad5", "multipaso")
+                        ),
+                        ft.MenuItemButton(
+                            content=ft.Text("Metodo de Euler"),
+                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.BLUE}),
+                            on_click=method_click,
+                            data = ("unidad5", "euler")
+                        ),
                     ]
                 ),
                 
