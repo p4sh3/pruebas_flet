@@ -1,9 +1,7 @@
 import flet as ft
 import sympy as sp
-import pandas as pd
 from sympy import *
 from sympy.core.numbers import *
-# from methods.unidad1.grafico import show as show_grafico
 from methods.widgets.widgets import show_alert, open_dlg_modal
 name = "Método de Punto fijo"
 
@@ -25,12 +23,6 @@ def validar_expresion(expr):
         return sp.parse_expr(expr)
 
 
-
-# def validar_expresion(expr):# valida que se ingrese una funcion en el texfield funcion
-#     if not expr.strip():
-#         raise ValueError("Ingrese una funcio a resolver")
-#     return sp.parse_expr(expr)
-
 def solve(gx, x0, cifras): # codigo del algoritmo
     rows = []
     x = sp.Symbol('x')
@@ -44,15 +36,11 @@ def solve(gx, x0, cifras): # codigo del algoritmo
     aprox_actual = 0
     
     g_x = gx
-
-    df = pd.DataFrame(columns=["Iteracion", " Xi", "g(X)", "Error Aproximado"])
     
     while True:
         try:
             gxi = g_x.subs(x, xi).evalf()
-           # if im(gxi)!=0:
-           #     return True, "Se generaron numeros imaginarios, al calcular las iteraciones"
-           # else:
+          
             Ea = abs(((gxi - aprox_anterior)/gxi)*100)
             rows.append(ft.DataRow(
                 cells=[ft.DataCell(ft.Text(str(cell))) for cell in [iteracion, xi, gxi, Ea]],

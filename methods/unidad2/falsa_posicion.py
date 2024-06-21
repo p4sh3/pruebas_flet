@@ -1,7 +1,5 @@
 import flet as ft
 import sympy as sp
-import pandas as pd
-# from methods.unidad1.grafico import show as show_grafico
 from methods.widgets.widgets import show_alert, open_dlg_modal
 name = "Método de Falsa Posicion"
 
@@ -33,10 +31,7 @@ def solve(fx, limite_inferior, limite_superior, cifras): # codigo del algoritmo
     
     Es = 0.5 * 10 ** (2 - cifras)
     iteracion = 1
-    
-    
-    df = pd.DataFrame(columns=["Iteración", "x1", "xU", "xR", "f(x1)", "f(xU)", "f(xR)", "f(x1)f(xR)", "Ea"])
-    
+        
     while True:
         
         fx1 = fx.subs(x, x1).evalf()
@@ -51,23 +46,20 @@ def solve(fx, limite_inferior, limite_superior, cifras): # codigo del algoritmo
             rows.append(ft.DataRow(
                 cells=[ft.DataCell(ft.Text(str(cell))) for cell in [iteracion, x1, xU, xR, fx1, fxu, fxr, condicion, Ea]],
             ))
-            df.loc[iteracion - 1] = [iteracion, x1, xU, xR, fx1, fxu, fxr, condicion, Ea]
         else:
             Ea = 1000
             rows.append(ft.DataRow(
                 cells=[ft.DataCell(ft.Text(str(cell))) for cell in [iteracion, x1, xU, xR, fx1, fxu, fxr, condicion, "--"]],
             ))
-            df.loc[iteracion - 1] = [iteracion, x1, xU, xR, fx1, fxu, fxr, condicion, "--"]
 
         if condicion < 0:
             xU = xR
         elif condicion > 0:
             x1 = xR
         else:
-            df.loc[iteracion - 1] = [iteracion, x1, xU, xR, fx1, fxu, fxr, condicion, Ea]
             break
 
-        if Ea < Es:
+        if Ea < Es or iteracion == 100:
             break    
 
         xR_ant = xR
