@@ -34,6 +34,7 @@ import methods.unidad4.integracion_numerica
 import methods.unidad5.multipaso
 import methods.unidad5.euler
 import methods.unidad5.rugen_kutta
+import methods.unidad5.taylor
 # def import_modules(packages):
 
 #     try:
@@ -341,6 +342,12 @@ def main(page: ft.Page):
                             style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.BLUE}),
                             on_click=method_click,
                             data = ("unidad5", "euler")
+                        ),
+                        ft.MenuItemButton(
+                            content=ft.Text("Metodo de Taylor"),
+                            style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.BLUE}),
+                            on_click=method_click,
+                            data = ("unidad5", "taylor")
                         ),
                     ]
                 ),

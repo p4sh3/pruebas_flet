@@ -24,7 +24,8 @@ def validar_expresion(expr):
         return sp.parse_expr(expr)
 
 
-def resolver(funcion_str, variables_str, limites_str, metodo_str, intervalos_str): # codigo del algoritmo
+def resolver(funcion_str, variables_str, limites_str, metodo_str, intervalos_str, error=None): # codigo del algoritmo
+    
     fx = funcion_str
     metodo = metodo_str
     
@@ -98,7 +99,7 @@ def resolver(funcion_str, variables_str, limites_str, metodo_str, intervalos_str
         
         def ValidarIntervalos():
             
-            if metodo == 'Simpson 1/3 Simple' or metodo == 'Simpson 3/8 Simple' or metodo == 'Trapecio Simple':
+            if metodo == 'Simpson 1/3 Simple' or metodo == 'Simpson 3/8 Simple' or metodo == 'Trapecio Simple' or metodo == 'Simpson Adaptativo':
                 return None, None
                 
             else:#Simpson Compuesto(Con intervalos)
@@ -114,11 +115,12 @@ def resolver(funcion_str, variables_str, limites_str, metodo_str, intervalos_str
                 else: 
                     return intervalos_str, False
         
-        def ResolverIntegral(a, b, n):
+        def ResolverIntegral(a, b, n=None):
+            
             #Simple y Compuesto, 1/3, 3/8
             #Trapecio Simple y Compuesto
             
-            if metodo == 'Simpson 1/3 Simple':
+            if metodo == 'Simpson 1/3 Simple' or metodo == 'Simpson Adaptativo':
                 
                 fxm = f(a+(b-a)/2)
                 resultado = (b-a)*(f(a) + 4*fxm + f(b))/6
@@ -190,9 +192,35 @@ def resolver(funcion_str, variables_str, limites_str, metodo_str, intervalos_str
                 #print(fxi)
                 
                 resultado = (h/2)*(fxi[0] + 2*sum(fxi[1:-1]) + fxi[-1])
+                
+            elif metodo == 'Cuadratura Gaussiana':
+                print(metodo_str)
+                if n < 2 or n > 5:
+                    message = 'Intervalos fuera de limite(2-5). '
+                    
+                    return message, True
+
+                zi = [[0.5773502691896257, -0.5773502691896257],
+                        [0.7745966692414834,0.0,-0.7745966692414834],
+                        [0.8611363115940526,0.3399810435848563,-0.3399810435848563,-0.8611363115940526],
+                        [-0.9061798459386640,-0.5384693101056831,0.0,0.5384693101056831,0.9061798459386640]]
+
+                wi = [[1.0,1.0],
+                        [0.5555555555555556,0.8888888888888888,0.5555555555555556],
+                        [0.3478548451374539,0.6521451548625461,0.6521451548625461,0.3478548451374539],
+                        [0.2369268850561891,0.4786286704993665,0.5688888888888889,0.4786286704993665,0.2369268850561891]]
+
+                evaluaciones = []
+                                
+                for i in range(n):
+                    evaluaciones.append(wi[n-2][i]*f(((b-a)/2)*zi[n-2][i]+((a+b)/2)))
+
+                resultado = ((b-a)/2) * sum(evaluaciones)
+
             
             else:
-                raise ValueError('Método inválido.')
+                message = 'Método inválido.'
+                return message, True
             
             # Devolvemos el número o la expresión si es múltiple
             if resultado.is_real:
@@ -200,6 +228,36 @@ def resolver(funcion_str, variables_str, limites_str, metodo_str, intervalos_str
                 
             else:
                 return resultado
+        
+        def Integral_Adaptativa(a, b, error, Raiz):
+            I1 = ResolverIntegral(a, b)
+            I2 = ResolverIntegral(a, (a + b) / 2)
+            I3 = ResolverIntegral((a + b) / 2, b) 
+            #print(f"S{I1} --> \tS{I2}\tS{I3}")
+            # print(f"[{a}, {b}] =\t[{a}, {(a + b) / 2}]\t[{(a + b) / 2}, {b}]")
+            
+            Ea = abs(I1 - I2 - I3)
+            
+            if Ea < 15 * error:
+                return I2 + I3 + (I2 + I3 - I1) / 15
+            
+            else:
+                nodo_izquierda = Integral_Adaptativa(a, (a + b) / 2, error / 2, I2)
+                nodo_derecha = Integral_Adaptativa((a + b) / 2, b, error / 2, I3)
+                return nodo_izquierda + nodo_derecha
+            
+        # def Validar_Error():
+            
+        #     if not (isinstance(error, (int,float)) and not isinstance(error,(bool))):
+        #         message = 'El error debe ser un número.'
+        
+               
+            
+        #     elif not (error > 0 and error<1):
+        #         message = 'El error debe ser valores entre 0 y 1.'    
+            
+        #     return message, True
+            
         
         # Validación de datos
         
@@ -222,20 +280,49 @@ def resolver(funcion_str, variables_str, limites_str, metodo_str, intervalos_str
             message = intervalos
             return None, message, True
         
-             
-        funciones = [fx]
-        
-        message = ''
-        
-        for i in range(0,len(variables),1):
-            variable = variables[i]
-            funcion = funciones[i]
-            funciones.append(ResolverIntegral(limites[i][0], limites[i][1], intervalos))
-            message += f'\n{i+1}° Integral. Evaluada respecto a {variables[i]}:\nResultado: {funciones[-1]}'
-            solucion_final = funciones[-1]
+        if metodo == "Simpson Adaptativo":
             
-        
-        return solucion_final, message, False
+            x = sp.symbols('x')
+            
+            # # message, alert = Validar_Error()
+            
+            # if alert:
+            #     return None, message, alert
+            
+            funcion = fx
+            variable = 'x'
+            
+            if funcion.free_symbols == {x}:
+                a = limites[0][0]
+                b = limites[0][1]
+                # Integral Adaptativa(a, b, error)
+                solucion_final = Integral_Adaptativa(a, b, error, ResolverIntegral(a,b))
+                
+                message = f"funcion = {funcion}\na = {a}\nb = {b}\ne = {error}\nEl resultado de la integración adaptativa de Simpson es: {solucion_final}"
+                
+                return solucion_final, message, False
+            
+            else:
+                message ='Este metodo solo permite expresiones en términos de x.'
+                
+                return None, message, True
+            
+           
+            
+            
+        else: 
+            funciones = [fx]
+            
+            message = ''
+            
+            for i in range(0,len(variables),1):
+                variable = variables[i]
+                funcion = funciones[i]
+                funciones.append(ResolverIntegral(limites[i][0], limites[i][1], intervalos))
+                message += f'\n{i+1}° Integral. Evaluada respecto a {variables[i]}:\nResultado: {funciones[-1]}'
+                solucion_final = funciones[-1]
+                
+            return solucion_final, message, False
     
     except sp.SympifyError:
         message = "Error: No se pudo convertir una de las expresiones a una expresión SymPy válida."
@@ -285,7 +372,7 @@ def show(): # Muestra los resultados
         
         selection_option = int(select_options.value)      
         
-        if (selection_option == 1) or (selection_option == 3) or (selection_option == 5): #Diferencia numerica      
+        if (selection_option == 1) or (selection_option == 3) or (selection_option == 5) or (selection_option == 8): #Diferencia numerica      
             try:
                 x=sp.symbols('x')
                 
@@ -298,6 +385,7 @@ def show(): # Muestra los resultados
                 intervalos_str = row.controls[5].value
                 intervalos_str = None
                 
+                
                 try:
                     if '#' in limites:
                         limites_integrar = [row.split(",") for row in limites.split("#")]
@@ -308,40 +396,46 @@ def show(): # Muestra los resultados
                 except Exception as e:
                     show_alert(event, f'Se ingresaron de manera incorrecta los valores de limites\n{limites_str}')
                 
-                print(limites_str)
-                print(variables_str)
                 
                 if selection_option == 1:
                     metodo_str = 'Simpson 1/3 Simple'
+                    error = None
                 elif selection_option == 3:
                     metodo_str = 'Simpson 3/8 Simple'
+                    error = None
                 elif selection_option == 5:
                     metodo_str = 'Trapecio Simple'
-            
-                try:  
-                    resultado, message, alert = resolver(funcion_str, variables_str, limites_str, metodo_str, intervalos_str)
-                    
-                    if alert == True:
-                        show_alert(event, message)
-                    else: 
-                        #Mostrar resultados
-                        lbl_results.content = ft.Text(value=f'{message}', size=16, text_align=ft.TextAlign.CENTER)
-                        lbl_results2.content = ft.Text(value=f'Valor aproximado: {resultado}', weight="bold", size=20, text_align=ft.TextAlign.CENTER)
-                        lbl_results2.bgcolor = ft.colors.BLUE
-                        lbl_results2.padding = 10
-                        lbl_results2.border_radius = 10
-                        container_results.visible=True
-                        event.control.page.update()
-                                    
-                except ValueError as e:
-                    print(f"Error: {e}")
-                    show_alert(event, f'Ingrese una funcion valida {e}')       
+                    error = None
+                elif selection_option == 8:
+                    error = float(row.controls[6].value)
+                    metodo_str = 'Simpson Adaptativo'
+                if error < 1 and error > 0:
+                    try:  
+                        resultado, message, alert = resolver(funcion_str, variables_str, limites_str, metodo_str, intervalos_str, error)
+                        
+                        if alert == True:
+                            show_alert(event, message)
+                        else: 
+                            #Mostrar resultados
+                            lbl_results.content = ft.Text(value=f'{message}', size=16, text_align=ft.TextAlign.CENTER)
+                            lbl_results2.content = ft.Text(value=f'Valor aproximado: {resultado}', weight="bold", size=20, text_align=ft.TextAlign.CENTER)
+                            lbl_results2.bgcolor = ft.colors.BLUE
+                            lbl_results2.padding = 10
+                            lbl_results2.border_radius = 10
+                            container_results.visible=True
+                            event.control.page.update()
+                                        
+                    except ValueError as e:
+                        print(f"Error: {e}")
+                        show_alert(event, f'Ingrese una funcion valida {e}')    
+                else: 
+                    show_alert(event, 'El valor de error a ingresar debe ser entre 0 y 1')  
         
             except ValueError as e:
                 print(f"Error: {e}")
                 show_alert(event, f'{e}') # me muestra errores si el usuario ingresa caracteres en los textfield 
     
-        elif (selection_option == 2) or (selection_option == 4) or (selection_option == 6): #Diferencia numerica      
+        elif (selection_option == 2) or (selection_option == 4) or (selection_option == 6) or (selection_option == 7): #compuestos, cuadratura gausiana   
             try:
                 x=sp.symbols('x')
                 
@@ -349,7 +443,7 @@ def show(): # Muestra los resultados
                 
                 variables = row.controls[3].value
                 variables_str = [(valor.strip()) for valor in variables.split(',')]
-                
+        
                 limites = row.controls[4].value
                 intervalos_str = int(row.controls[5].value)
                 
@@ -366,7 +460,11 @@ def show(): # Muestra los resultados
                     metodo_str = 'Simpson 3/8 Compuesto'
                 elif selection_option == 6:
                     metodo_str = 'Trapecio Compuesto'
-            
+                elif selection_option == 7:
+                    metodo_str = 'Cuadratura Gaussiana'
+
+                print(metodo_str)
+                
                 try:  
                     resultado, message, alert = resolver(funcion_str, variables_str, limites_str, metodo_str, intervalos_str)
                     
@@ -402,8 +500,11 @@ def show(): # Muestra los resultados
             row.controls[3].visible = True
             row.controls[4].visible = True
             row.controls[5].visible = False
-            row.controls[6].visible = True
+            row.controls[6].visible = False
             row.controls[7].visible = True
+            row.controls[8].visible = True
+            row.controls[3].col = {"md": 3}
+            row.controls[2].col = {"md": 3}
             clean(event)
             event.control.page.update()
             
@@ -413,8 +514,12 @@ def show(): # Muestra los resultados
             row.controls[3].visible = True
             row.controls[4].visible = True
             row.controls[5].visible = True
-            row.controls[6].visible = True
+            row.controls[6].visible = False
             row.controls[7].visible = True
+            row.controls[8].visible = True
+            row.controls[3].col = {"md": 2}
+            row.controls[5].col = {"md": 2}
+            row.controls[2].col = {"md": 2}
             clean(event)
             event.control.page.update()
             
@@ -424,8 +529,11 @@ def show(): # Muestra los resultados
             row.controls[3].visible = True
             row.controls[4].visible = True
             row.controls[5].visible = False
-            row.controls[6].visible = True
+            row.controls[6].visible = False
             row.controls[7].visible = True
+            row.controls[8].visible = True
+            row.controls[3].col = {"md": 3}
+            row.controls[2].col = {"md": 3}
             clean(event)
             event.control.page.update()
         
@@ -435,8 +543,12 @@ def show(): # Muestra los resultados
             row.controls[3].visible = True
             row.controls[4].visible = True
             row.controls[5].visible = True
-            row.controls[6].visible = True
+            row.controls[6].visible = False
             row.controls[7].visible = True
+            row.controls[8].visible = True
+            row.controls[3].col = {"md": 2}
+            row.controls[5].col = {"md": 2}
+            row.controls[2].col = {"md": 2}
             clean(event)
             event.control.page.update()
         
@@ -446,8 +558,11 @@ def show(): # Muestra los resultados
             row.controls[3].visible = True
             row.controls[4].visible = True
             row.controls[5].visible = False
-            row.controls[6].visible = True
+            row.controls[6].visible = False
             row.controls[7].visible = True
+            row.controls[8].visible = True
+            row.controls[3].col = {"md": 3}
+            row.controls[2].col = {"md": 3}
             clean(event)
             event.control.page.update()
             
@@ -457,8 +572,42 @@ def show(): # Muestra los resultados
             row.controls[3].visible = True
             row.controls[4].visible = True
             row.controls[5].visible = True
-            row.controls[6].visible = True
+            row.controls[6].visible = False
             row.controls[7].visible = True
+            row.controls[8].visible = True
+            row.controls[3].col = {"md": 2}
+            row.controls[5].col = {"md": 2}
+            row.controls[2].col = {"md": 2}
+            clean(event)
+            event.control.page.update()
+            
+        elif selection_option == 7:
+            row.controls[0].value = 'Cuadratura Gaussiana'
+            row.controls[2].visible = True
+            row.controls[3].visible = True
+            row.controls[4].visible = True
+            row.controls[5].visible = True
+            row.controls[6].visible = False
+            row.controls[7].visible = True
+            row.controls[8].visible = True
+            row.controls[3].col = {"md": 2}
+            row.controls[5].col = {"md": 2}
+            row.controls[2].col = {"md": 2}
+            clean(event)
+            event.control.page.update()
+        
+        elif selection_option == 8:
+            row.controls[0].value = 'Simpson Adaptativo'
+            row.controls[2].visible = True
+            row.controls[3].visible = True
+            row.controls[4].visible = True
+            row.controls[5].visible = False
+            row.controls[7].visible = True
+            row.controls[8].visible = True
+            row.controls[6].visible = True
+            row.controls[3].col = {"md": 2}
+            row.controls[6].col = {"md": 2}
+            row.controls[2].col = {"md": 2}
             clean(event)
             event.control.page.update()
     
@@ -474,6 +623,8 @@ def show(): # Muestra los resultados
             ft.dropdown.Option(text='Simpson 3/8 Compuesto', key=4, on_click=clean),
             ft.dropdown.Option(text='Trapecio Simple', key=5, on_click=clean),
             ft.dropdown.Option(text='Trapecio Compuesto', key=6, on_click=clean),
+            ft.dropdown.Option(text='Cuadratura Gaussiana', key=7, on_click=clean),
+            ft.dropdown.Option(text='Simpson Adaptativo', key=8, on_click=clean),
         ]
     )
     
@@ -519,6 +670,12 @@ def show(): # Muestra los resultados
                 height=57,
                 visible=False,
                 label="Intervalos", 
+                col={"md": 3}),
+            
+            ft.TextField(
+                height=57,
+                visible=False,
+                label="Error", 
                 col={"md": 3}),
             
             ft.ElevatedButton(
