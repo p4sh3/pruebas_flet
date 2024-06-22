@@ -49,19 +49,19 @@ def solve(fx, punto, cifras): # codigo del algoritmo
     
     if im(fxi) != 0 or isinstance(fxi,ComplexInfinity):
         comprobacion=False
-        return rows, xi1, fx, None, iteracion, True, f"El punto inicial sale del dominio de la función {fx}"
+        return rows, None, fx, None, iteracion, True, f"El punto inicial sale del dominio de la función {fx}"
          
     elif im(fxi_prima)!= 0 or isinstance(fxi_prima,ComplexInfinity):
         comprobacion=False
-        return rows, xi1, fx, None, iteracion, True, f"El punto inicial sale del dominio de la derivada 1 {fx_prima} "
+        return rows, None, fx, None, iteracion, True, f"El punto inicial sale del dominio de la derivada 1 {fx_prima} "
         
     elif im(fxi2_prima) != 0 or isinstance(fxi2_prima,ComplexInfinity):
         comprobacion=False
-        return rows, xi1, fx, None, iteracion, True, f"El punto inicial sale del dominio de la derivada 2 {fx} "
+        return rows, None, fx, None, iteracion, True, f"El punto inicial sale del dominio de la derivada 2 {fx} "
     
     elif isinstance(convergencia,ComplexInfinity) or isinstance(convergencia,NaN):
         comprobacion=False
-        return rows, xi1, fx, Ea, iteracion, True, f"Se genero una division entre cero al calcular la convergencia "
+        return rows, None, fx, None, iteracion, True, f"Se genero una division entre cero al calcular la convergencia "
    
     else:
         
@@ -70,7 +70,7 @@ def solve(fx, punto, cifras): # codigo del algoritmo
                 fxi = fx.subs(x, xi).evalf()
                 
                 if im(fxi)!=0 or isinstance(fxi,ComplexInfinity):
-                    return rows, xi1, fx, None, iteracion, True, f"El punto inicial sale del dominio de la función {fx} "
+                    return rows, None, fx, None, iteracion, True, f"El punto inicial sale del dominio de la función {fx} "
                 
                 #calculo de la derivada
                 fx_prima = fx.diff(x)
@@ -79,12 +79,12 @@ def solve(fx, punto, cifras): # codigo del algoritmo
                 fxi_prima = fx_prima.subs(x, xi).evalf()
                 
                 if im(fxi_prima)!=0 or isinstance(fxi_prima, ComplexInfinity):
-                    return rows, xi1, fx, None, iteracion, True, f"El punto inicial sale del dominio de la derivada {fx_prima} "
+                    return rows, None, fx, None, iteracion, True, f"El punto inicial sale del dominio de la derivada {fx_prima} "
                 
                 fxi2_prima = fx2_prima.subs(x, xi).evalf()
                 
                 if im(fxi2_prima) !=0 or isinstance(fxi_prima, ComplexInfinity):
-                    return rows, xi1, fx, None, iteracion, True, f"El punto inicial sale del dominio de la derivada {fx2_prima} "
+                    return rows, None, fx, None, iteracion, True, f"El punto inicial sale del dominio de la derivada {fx2_prima} "
                 
                 #calculo para encontrar la raiz aproximada
                 xi1 = (xi - ((fxi*fxi_prima) / ( (fxi_prima)**2 - (fxi*fxi2_prima))) )

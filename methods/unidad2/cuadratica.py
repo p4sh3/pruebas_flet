@@ -23,6 +23,42 @@ def validar_expresion(expr):
     else: 
         return sp.parse_expr(expr)
 
+def es_polinomio(expr):
+    try:
+        # Obtener los términos de la expresión
+        terminos = expr.as_ordered_terms()
+        
+        # Verificar cada término
+        for termino in terminos:
+            # Un término es un monomio si es del tipo constante * variable**exponente
+            if not termino.is_Mul and not termino.is_Pow and not termino.is_Number:
+                return False
+            
+            if termino.is_Mul:
+                # Verificar cada factor del término
+                for factor in termino.args:
+                    if factor.is_Pow:
+                        base, exponente = factor.args
+                        if not (base.is_Symbol and exponente.is_Integer and exponente >= 0):
+                            return False
+                    elif factor.is_Symbol or factor.is_Number:
+                        continue
+                    else:
+                        return False
+            elif termino.is_Pow:
+                base, exponente = termino.args
+                if not (base.is_Symbol and exponente.is_Integer and exponente >= 0):
+                    return False
+            elif termino.is_Symbol:
+                continue
+            elif termino.is_Number:
+                continue
+            else:
+                return False
+        
+        return True
+    except (sp.SympifyError, TypeError):
+        return False
 
 def solve(polinomio): # codigo del algoritmo
     x = sp.symbols('x')
@@ -64,25 +100,30 @@ def show(): # Muestra los resultados
             x=sp.symbols('x')
             
             polinomio = validar_expresion(row.controls[1].value)
+            es_poli = es_polinomio(polinomio)
+            
+            if es_poli:
                           
-            try:  
-                message, message2, alert = solve(polinomio) 
-                
-                if alert == True:
-                    show_alert(event, message)
-                else: 
-                    #Mostrar resultados
-                    lbl_results.content = ft.Text(value=f'{message}', size=16, text_align=ft.TextAlign.CENTER)
-                    lbl_results2.content = ft.Text(value=f'{message2}', weight="bold", size=20, text_align=ft.TextAlign.CENTER)
-                    lbl_results2.bgcolor = ft.colors.BLUE
-                    lbl_results2.padding = 20
-                    lbl_results2.border_radius = 20
-                    container_results.visible=True
-                    event.control.page.update()
-                                
-            except ValueError as e:
-                print(f"Error: {e}")
-                show_alert(event, f'Ingrese una funcion valida {e}')       
+                try:  
+                    message, message2, alert = solve(polinomio) 
+                    
+                    if alert == True:
+                        show_alert(event, message)
+                    else: 
+                        #Mostrar resultados
+                        lbl_results.content = ft.Text(value=f'{message}', size=16, text_align=ft.TextAlign.CENTER)
+                        lbl_results2.content = ft.Text(value=f'{message2}', weight="bold", size=20, text_align=ft.TextAlign.CENTER)
+                        lbl_results2.bgcolor = ft.colors.BLUE
+                        lbl_results2.padding = 20
+                        lbl_results2.border_radius = 20
+                        container_results.visible=True
+                        event.control.page.update()
+                                    
+                except ValueError as e:
+                    print(f"Error: {e}")
+                    show_alert(event, f'Ingrese una funcion valida {e}')       
+            else:
+                show_alert(event, 'La expresion ingresda no es un polinomo\nPor favor ingrese un polinomio')
     
         except ValueError as e:
             print(f"Error: {e}")

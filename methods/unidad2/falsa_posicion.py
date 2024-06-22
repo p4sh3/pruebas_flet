@@ -89,32 +89,35 @@ def show(): # Muestra los resultados
             f_x1 = fx.subs(x, limite_inferior).evalf()
             f_xu = fx.subs(x, limite_superior).evalf()
             
-            if (f_x1 > 0 and f_xu < 0 and cifras >= 0) or (f_x1 < 0 and f_xu > 0 and cifras >= 0):
-                if(limite_superior > limite_inferior):
-                    try: 
-                        rows, raiz, iteracion, Ea, fx, metodo = solve(fx, limite_inferior, limite_superior, cifras)
-                        table.rows = rows
-                        table.visible = True
-                        #Mostrar resultados
-                        lbl_root.content = ft.Text(value=f'Solucion: {raiz}', weight="bold", size=20, text_align=ft.TextAlign.CENTER)
-                        lbl_root.bgcolor = ft.colors.GREEN
-                        lbl_root.padding = 10
-                        lbl_root.border_radius = 25
-                        lbl_root.width = 100
-                        lbl_results.value = f'Metodo: {metodo}\nFuncion {fx}\nCon {iteracion} iteraciones\nError porcentual aproximado {Ea}%'
-                        container_results.visible=True
-                        
-                        event.control.page.update()
-                    except ValueError as e:
-                        print(f"Error: {e}")
-                        show_alert(event, f'Ingrese una funcion valida {e}')
-                else:
-                    show_alert(event, 'El limite inferior no puede ser mayor que el el limite superior')
+            if f_x1.is_real and f_xu.is_real :
+                if (f_x1 > 0 and f_xu < 0 and cifras >= 0) or (f_x1 < 0 and f_xu > 0 and cifras >= 0):
+                    if(limite_superior > limite_inferior):
+                        try: 
+                            rows, raiz, iteracion, Ea, fx, metodo = solve(fx, limite_inferior, limite_superior, cifras)
+                            table.rows = rows
+                            table.visible = True
+                            #Mostrar resultados
+                            lbl_root.content = ft.Text(value=f'Solucion: {raiz}', weight="bold", size=20, text_align=ft.TextAlign.CENTER)
+                            lbl_root.bgcolor = ft.colors.GREEN
+                            lbl_root.padding = 10
+                            lbl_root.border_radius = 25
+                            lbl_root.width = 100
+                            lbl_results.value = f'Metodo: {metodo}\nFuncion {fx}\nCon {iteracion} iteraciones\nError porcentual aproximado {Ea}%'
+                            container_results.visible=True
+                            
+                            event.control.page.update()
+                        except ValueError as e:
+                            print(f"Error: {e}")
+                            show_alert(event, f'Ingrese una funcion valida {e}')
+                    else:
+                        show_alert(event, 'El limite inferior no puede ser mayor que el el limite superior')
+                else: 
+                    if cifras < 0:
+                        show_alert(event, 'Las cifras significativas deben ser mayor a cero')
+                    else:   
+                        show_alert(event, f'En el intervalo [{limite_inferior}, {limite_superior}] no existe una raiz')
             else: 
-                if cifras < 0:
-                    show_alert(event, 'Las cifras significativas deben ser mayor a cero')
-                else:   
-                    show_alert(event, f'En el intervalo [{limite_inferior}, {limite_superior}] no existe una raiz')
+                show_alert(event, 'Los datos ingresados generan numeros imaginarios')
               
         except ValueError as e:
             print(f"Error: {e}")

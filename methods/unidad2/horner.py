@@ -23,6 +23,42 @@ def validar_expresion(expr):
     else: 
         return sp.parse_expr(expr)
 
+def es_polinomio(expr):
+    try:
+        # Obtener los términos de la expresión
+        terminos = expr.as_ordered_terms()
+        
+        # Verificar cada término
+        for termino in terminos:
+            # Un término es un monomio si es del tipo constante * variable**exponente
+            if not termino.is_Mul and not termino.is_Pow and not termino.is_Number:
+                return False
+            
+            if termino.is_Mul:
+                # Verificar cada factor del término
+                for factor in termino.args:
+                    if factor.is_Pow:
+                        base, exponente = factor.args
+                        if not (base.is_Symbol and exponente.is_Integer and exponente >= 0):
+                            return False
+                    elif factor.is_Symbol or factor.is_Number:
+                        continue
+                    else:
+                        return False
+            elif termino.is_Pow:
+                base, exponente = termino.args
+                if not (base.is_Symbol and exponente.is_Integer and exponente >= 0):
+                    return False
+            elif termino.is_Symbol:
+                continue
+            elif termino.is_Number:
+                continue
+            else:
+                return False
+        
+        return True
+    except (sp.SympifyError, TypeError):
+        return False
 
 def solve(polinomio, punto0, cifras): # codigo del algoritmo
     rows = []
@@ -75,7 +111,7 @@ def solve(polinomio, punto0, cifras): # codigo del algoritmo
                     cells=[ft.DataCell(ft.Text(str(cell))) for cell in [iteracion, x0, xi, Ea]],
             ))
             
-            if Es >= Ea or iteracion == 100:      
+            if Ea < Es or iteracion == 100:      
                 break
             else:
                 x0 = xi
@@ -108,32 +144,38 @@ def show(): # Muestra los resultados
             punto0 = float(row.controls[2].value)
             cifras = int(row.controls[3].value)
             
-            if cifras > 0:
-                try:
-                    rows, iteracion, xi, Ea, alert, message = solve(polinomio, punto0, cifras)
-                
-                    if alert == True:
-                        show_alert(event, message)
-                    else:                
+            es_poli = es_polinomio(polinomio)
+            
+            if es_poli:
+            
+                if cifras > 0:
+                    try:
                         rows, iteracion, xi, Ea, alert, message = solve(polinomio, punto0, cifras)
-                        table.rows = rows
-                        table.visible = True
-                                    
-                        #Mostrar resultados
-                        lbl_root.content = ft.Text(value=f'Solucion: {xi}', weight="bold", size=20, text_align=ft.TextAlign.CENTER)
-                        lbl_root.bgcolor = ft.colors.GREEN
-                        lbl_root.padding = 10
-                        lbl_root.border_radius = 10
-                        lbl_results.value = f'{name}\nf(x) {polinomio}\nCon {iteracion} iteraciones\nError porcentual aproximado {Ea}%'
-                        container_results.visible=True
-                        event.control.page.update()
-                            
-                except ValueError as e:
-                    print(f"Error: {e}")
-                    show_alert(event, f'Ingrese una funcion valida {e}')
-            else:
+                    
+                        if alert == True:
+                            show_alert(event, message)
+                        else:                
+                            rows, iteracion, xi, Ea, alert, message = solve(polinomio, punto0, cifras)
+                            table.rows = rows
+                            table.visible = True
+                                        
+                            #Mostrar resultados
+                            lbl_root.content = ft.Text(value=f'Solucion: {xi}', weight="bold", size=20, text_align=ft.TextAlign.CENTER)
+                            lbl_root.bgcolor = ft.colors.GREEN
+                            lbl_root.padding = 10
+                            lbl_root.border_radius = 10
+                            lbl_results.value = f'{name}\nf(x) {polinomio}\nCon {iteracion} iteraciones\nError porcentual aproximado {Ea}%'
+                            container_results.visible=True
+                            event.control.page.update()
+                                
+                    except ValueError as e:
+                        print(f"Error: {e}")
+                        show_alert(event, f'Ingrese una funcion valida {e}')
+                else:
 
-                show_alert(event, 'Las cifras significativas deben ser mayor a cero')
+                    show_alert(event, 'Las cifras significativas deben ser mayor a cero')
+            else:
+                show_alert(event, 'La expresion ingresda no es un polinomo\nPor favor ingrese un polinomio')
     
         except ValueError as e:
             print(f"Error: {e}")

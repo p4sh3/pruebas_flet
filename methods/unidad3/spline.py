@@ -167,7 +167,7 @@ def resolver(fx, valores_x, valores_y, grade, eval_x, selection_option): # codig
                 evaluacion = listafinal[cual_ecuacion].subs(x,x_evaluar).evalf(n=7)
                 vv = N(f_x.subs(x,x_evaluar),12).evalf()
                 ep = abs((vv-evaluacion)/vv)*100
-                message = f"Error Porcentual: {ep}%"
+                message = f"\nEvaluando el punto x={x_evaluar}\nEn la ecuacion {listafinal[cual_ecuacion]}\nResultado:{evaluacion}\nError Porcentual: {ep}%"
                                
                 return tabla, soluciones, seccionada_mostrar, message, False
                 
@@ -280,7 +280,7 @@ def resolver(fx, valores_x, valores_y, grade, eval_x, selection_option): # codig
                 
                 vv = N(f_x.subs(x,x_evaluar),12).evalf()
                 ep = abs((vv - evaluacion)/vv)*100
-                message = f"Error Porcentual: {ep}%"
+                message = f"\nEvaluando el punto x={x_evaluar}\nEn la ecuacion {listafinal[cual_ecuacion]}\nResultado:{evaluacion}\nError Porcentual: {ep}%"
                 
                 return tabla, soluciones, seccionada_mostrar, message, False
                 
@@ -387,9 +387,10 @@ def resolver(fx, valores_x, valores_y, grade, eval_x, selection_option): # codig
                         break
                     i=i+1
                 evaluacion = listafinal[cual_ecuacion].subs(x,x_evaluar).evalf()
+                # punto_eval = f"Evaluendo el punto x={x_evaluar}\nEn la ecuacion {listafinal[cual_ecuacion]}\nResultado:{evaluacion}") 
                 vv = N(f_x.subs(x,x_evaluar),12).evalf()
                 ep = abs((vv - evaluacion)/vv)*100
-                message = f"Error Porcentual: {ep}%"
+                message = f"\nEvaluando el punto x={x_evaluar}\nEn la ecuacion {listafinal[cual_ecuacion]}\nResultado:{evaluacion}\nError Porcentual: {ep}%"
                 
                 return tabla, soluciones, seccionada_mostrar, message, False
                 
@@ -417,7 +418,6 @@ def show(): # Muestra los resultados
         row.controls[5].value = '' 
         row.controls[6].value = ''       
         row.controls[2].autofocus = True
-        lbl_results3.controls[0].value = ''
         tbl.visible = False
         lbl_eval.visible = False
         event.control.page.update()
@@ -426,25 +426,8 @@ def show(): # Muestra los resultados
         x = sp.symbols('x')
         
         #Limpia los datos del valor a evaluar en el polinomio
-        lbl_results3.controls[0].value = row.controls[6].value
         lbl_eval.visible = False
-        
-        def evaluar(event):
-            x = sp.symbols('x')
-            try:
-                num_evaluar = float(lbl_results3.controls[0].value)
-                polinomio = seccionada[0][0]
-                poli_eval  = polinomio.subs(x, num_evaluar)
-                lbl_eval.content = ft.Text(f'Punto a evalurar X = {num_evaluar}: \t\t\t\t Ecuacion de la seccionada: {polinomio}\nP({num_evaluar}) = {poli_eval}', weight="bold", size=20, text_align = ft.TextAlign.CENTER )
-                # lbl_results3.controls[2].size = 16
-                # lbl_results3.controls[2].text_align = ft.TextAlign.CENTER 
-                lbl_eval.bgcolor = ft.colors.GREEN
-                lbl_eval.border_radius = 10
-                lbl_eval.padding = 10
-                lbl_eval.visible = True
-                event.control.page.update()
-            except ValueError:
-                show_alert(event, 'Por favor, ingrese un número real')
+    
             
         selection_option = int(select_options.value)
         
@@ -475,7 +458,6 @@ def show(): # Muestra los resultados
                         lbl_results2.bgcolor = ft.colors.BLUE
                         lbl_results2.padding = 10
                         lbl_results2.border_radius = 10
-                        lbl_results3.controls[1].on_click = evaluar
                         container_results.visible = True
                         event.control.page.update()
                                     
@@ -516,7 +498,6 @@ def show(): # Muestra los resultados
                         lbl_results2.bgcolor = ft.colors.BLUE
                         lbl_results2.padding = 10
                         lbl_results2.border_radius = 10
-                        lbl_results3.controls[1].on_click = evaluar
                         container_results.visible=True
                         event.control.page.update()
                                     
@@ -641,31 +622,7 @@ def show(): # Muestra los resultados
     lbl_results2 = ft.Container()
     lbl_results = ft.Container()
     lbl_eval = ft.Container()
-    
-    lbl_results3 = ft.ResponsiveRow(
-        [
-        ft.TextField(
-            label='Valor a evaluar',
-            col={"sm": 10, "md": 10, "xl": 4}  
-        ),
-        ft.ElevatedButton(
-            text = 'Evaluar',
-            height=45,
-            col={"sm": 10, "md": 10, "xl": 2}
-        ),
-        ft.Container(
-            lbl_eval,
-            col={"sm": 10, "md": 8, "xl": 8}
-        )
-        
-        
-        ], alignment=ft.MainAxisAlignment.CENTER,  
-        # ft.Container(
-        #     lbl_results3,
-        #     col={"sm": 10, "md": 10, "xl": 10},
-        # ),
-        
-    )
+
     
     # contenedor de los controlos que se muestran los resultados
     container_results = ft.Container(
@@ -687,10 +644,7 @@ def show(): # Muestra los resultados
                             value=('Evaluar un valor de X en el polinomo resultante'), 
                             text_align=ft.TextAlign.CENTER
                         ),
-                        ft.Container(
-                            lbl_results3,
-                            col={"sm": 12, "md": 12, "xl": 12},
-                        ),
+
                     ],
                         alignment=ft.MainAxisAlignment.CENTER,
                 )
