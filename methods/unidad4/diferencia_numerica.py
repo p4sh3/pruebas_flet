@@ -318,8 +318,12 @@ def show(): # Muestra los resultados
                 # en la interfaz no se actualiza cuando se selecciona una opcion de los select
                 
                 funcion = validar_expresion(row.controls[2].value)
-                h_value = float(row.controls[6].value)
+                # try:
+                #     h_value = float(row.controls[6].value)
+                # except ValueError as e:
+                #     show_alert(event, 'Se espera un valor entero decimal para el valor de h')
                 x_value = float(row.controls[7].value)
+                h_value = float(row.controls[6].value)
                 nivel = row.controls[8].value
                 nivel = None
                 derivada = option_orden_dx

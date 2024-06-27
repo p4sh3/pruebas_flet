@@ -45,7 +45,7 @@ def solve(fx, limite_inferior, limite_superior, cifras): # codigo del algoritmo
                 cells=[ft.DataCell(ft.Text(str(cell))) for cell in [iteracion, x1, xU, xR, fx1, fxu, fxr, condicion, Ea]],
             ))
         else:
-            Ea = 1000
+            Ea = 100
             rows.append(ft.DataRow(
                 cells=[ft.DataCell(ft.Text(str(cell))) for cell in [iteracion, x1, xU, xR, fx1, fxu, fxr, condicion, "--"]],
             ))
@@ -96,7 +96,7 @@ def show(): # Muestra los resultados
                             table.rows = rows
                             table.visible = True
                             #Mostrar resultados
-                            lbl_root.content = ft.Text(value=f'Solucion: {raiz}', weight="bold", size=20)
+                            lbl_root.content = ft.Text(value=f'Solucion: {raiz}', weight="bold", size=20, text_align=ft.TextAlign.CENTER)
                             lbl_root.bgcolor = ft.colors.GREEN
                             lbl_root.padding = 10
                             lbl_root.border_radius = 25

@@ -409,7 +409,7 @@ def show(): # Muestra los resultados
                 elif selection_option == 8:
                     error = float(row.controls[6].value)
                     metodo_str = 'Simpson Adaptativo'
-                if error < 1 and error > 0:
+                if error == None or (error < 1 and error > 0):
                     try:  
                         resultado, message, alert = resolver(funcion_str, variables_str, limites_str, metodo_str, intervalos_str, error)
                         

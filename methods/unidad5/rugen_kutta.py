@@ -34,10 +34,10 @@ def solve(edo, xi, yi, xf, orden, h): # codigo del algoritmo
             tabla[0].append(iteracion+1)
             tabla[1].append(xi)
             tabla[2].append(yi)
-            k_1 = N(edo,8,subs={x:xi}).evalf(n=6)
-            k1 = N(k_1,8,subs={y:yi}).evalf(n=6)
-            k_2 = N(edo,8,subs={x:xi+h}).evalf(n=6)
-            k2 = N(k_2,8,subs={y:yi+k1*h}).evalf(n=6)
+            k_1 = N(edo,8,subs={x:xi}).evalf(n=9)
+            k1 = N(k_1,8,subs={y:yi}).evalf(n=9)
+            k_2 = N(edo,8,subs={x:xi+h}).evalf(n=9)
+            k2 = N(k_2,8,subs={y:yi+k1*h}).evalf(n=9)
             
             if k1.is_real == False:
                 message = "En el valor k1 se generaron numeros no reales"
@@ -88,12 +88,12 @@ def solve(edo, xi, yi, xf, orden, h): # codigo del algoritmo
             tabla[0].append(iteracion+1)
             tabla[1].append(xi)
             tabla[2].append(yi)
-            k_1 = N(edo,8,subs={x:xi}).evalf(n=6)
-            k1 = N(k_1,8,subs={y:yi}).evalf(n=6)
-            k_2 = N(edo,8,subs={x:xi+(h/2)}).evalf(n=6)
-            k2 = N(k_2,8,subs={y:yi+(h/2)*k1}).evalf(n=6)
-            k_3 = N(edo,8,subs={x:xi+(h)}).evalf(n=6)
-            k3 = N(k_3,8,subs={y:yi-k1*h+2*k2*h}).evalf(n=6)
+            k_1 = N(edo,8,subs={x:xi}).evalf(n=9)
+            k1 = N(k_1,8,subs={y:yi}).evalf(n=9)
+            k_2 = N(edo,8,subs={x:xi+(h/2)}).evalf(n=9)
+            k2 = N(k_2,8,subs={y:yi+(h/2)*k1}).evalf(n=9)
+            k_3 = N(edo,8,subs={x:xi+(h)}).evalf(n=9)
+            k3 = N(k_3,8,subs={y:yi-k1*h+2*k2*h}).evalf(n=9)
             if k1.is_real == False:
                 message =  "En el valor k1 se generaron numeros no reales"
                 return None, None, message, True
@@ -150,14 +150,14 @@ def solve(edo, xi, yi, xf, orden, h): # codigo del algoritmo
             tabla[1].append(xi)
             tabla[2].append(yi)
             
-            k_1 = N(edo,8,subs={x:xi}).evalf(n=8)
-            k1 = N(k_1,8,subs={y:yi}).evalf(n=6)
-            k_2 = N(edo,8,subs={x:xi+(h/2)}).evalf(n=6)
-            k2 = N(k_2,8,subs={y:yi+(h/2)*k1}).evalf(n=6)
-            k_3 = N(edo,8,subs={x:xi+(h/2)}).evalf(n=6)
-            k3 = N(k_3,8,subs={y:yi+k2*(h/2)}).evalf(n=6)
-            k_4 = N(edo,8,subs={x:xi+(h)}).evalf(n=6)
-            k4 = N(k_4,8,subs={y:yi+k3*h}).evalf(n=6)
+            k_1 = N(edo,8,subs={x:xi}).evalf(n=9)
+            k1 = N(k_1,8,subs={y:yi}).evalf(n=9)
+            k_2 = N(edo,8,subs={x:xi+(h/2)}).evalf(n=9)
+            k2 = N(k_2,8,subs={y:yi+(h/2)*k1}).evalf(n=9)
+            k_3 = N(edo,8,subs={x:xi+(h/2)}).evalf(n=9)
+            k3 = N(k_3,8,subs={y:yi+k2*(h/2)}).evalf(n=9)
+            k_4 = N(edo,8,subs={x:xi+(h)}).evalf(n=9)
+            k4 = N(k_4,8,subs={y:yi+k3*h}).evalf(n=9)
             
             if k1.is_real == False:
                 message = "En el valor k1 se generaron numeros no reales"
